@@ -73,6 +73,7 @@ export interface PokemonDetails {
 // GET ALL - POKEAPI
 // ==========================================
 export async function getPokemonList(limit: number, offset: number): Promise<PokemonListResponse> {
+
   const response = await fetch(`${POKE_API_URL}/pokemon?limit=${limit}&offset=${offset}`,
     {
       cache: "no-store",
@@ -87,7 +88,13 @@ export async function getPokemonList(limit: number, offset: number): Promise<Pok
 
   const data = await response.json();
 
-  const results: PokemonListItem[] =data.results.map((pokemon: {name: string; url: string;}) => {const id = Number(pokemon.url.split("/").filter(Boolean).pop());
+  const results: PokemonListItem[] = data.results.map(
+      (pokemon: {
+        name: string;
+        url: string;
+      }) => {
+
+        const id = Number(pokemon.url.split("/").filter(Boolean).pop());
 
         return {
           id,
@@ -108,6 +115,7 @@ export async function getPokemonList(limit: number, offset: number): Promise<Pok
 // GET ONE - POKEAPI
 // ==========================================
 export async function getPokemon(pokemon: string): Promise<PokemonDetails> {
+
   const pokemonName = pokemon.trim().toLowerCase();
 
   if (!pokemonName) {
@@ -116,14 +124,14 @@ export async function getPokemon(pokemon: string): Promise<PokemonDetails> {
     );
   }
 
-  const response = await fetch(
-    `${POKE_API_URL}/pokemon/${pokemonName}`,
+  const response = await fetch(`${POKE_API_URL}/pokemon/${pokemonName}`,
     {
       cache: "no-store",
     }
   );
 
   if (!response.ok) {
+
     if (response.status === 404) {
       throw new Error(
         "Pokemon no encontrado"
@@ -142,20 +150,26 @@ export async function getPokemon(pokemon: string): Promise<PokemonDetails> {
     name: data.name,
     height: data.height,
     weight: data.weight,
+
     abilities: data.abilities,
     forms: data.forms,
     moves: data.moves,
     species: data.species,
+
     sprites: {
       front_default:
         data.sprites.front_default,
+
       front_shiny:
         data.sprites.front_shiny,
+
       back_default:
         data.sprites.back_default,
+
       back_shiny:
         data.sprites.back_shiny,
     },
+
     types: data.types,
   };
 }
