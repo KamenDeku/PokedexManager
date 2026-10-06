@@ -10,6 +10,12 @@ datasource db {
 enum CollectionStatus {
   CAUGHT
   NOT_CAUGHT
+  RELEASED
+}
+
+enum TrainerStatus {
+  PROFESSOR
+  TRAINER
 }
 
 // ==========================================
@@ -20,6 +26,7 @@ model User {
   id        Int  @id @default(autoincrement())
   name      String
   password  String
+  role      TrainerStatus  @default(TRAINER)
   createdAt DateTime  @default(now())
 
   collection Collection[]

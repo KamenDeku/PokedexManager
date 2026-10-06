@@ -3,6 +3,18 @@ const POKE_API_URL = "https://pokeapi.co/api/v2";
 // ------------------------------------------
 // INFO
 // ------------------------------------------
+export interface PokemonListItem {
+  id: number;
+  name: string;
+}
+
+export interface PokemonListResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: PokemonListItem[];
+}
+
 interface PokemonAbility {
   ability: {
     name: string;
@@ -43,9 +55,6 @@ interface PokemonType {
   };
 }
 
-// ------------------------------------------
-// RESPONSE
-// ------------------------------------------
 export interface PokemonDetails {
   id: number;
   name: string;
@@ -60,15 +69,55 @@ export interface PokemonDetails {
   types: PokemonType[];
 }
 
-// ------------------------------------------
+// ==========================================
+// GET ALL - POKEAPI
+// ==========================================
+export async function getPokemonList(limit: number, offset: number): Promise<PokemonListResponse> {
+  const response = await fetch(`${POKE_API_URL}/pokemon?limit=${limit}&offset=${offset}`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      "Error al consultar la lista de Pokemones"
+    );
+  }
+
+  const data = await response.json();
+
+  const results: PokemonListItem[] =data.results.map((pokemon: {name: string; url: string;}) => {const id = Number(pokemon.url.split("/").filter(Boolean).pop());
+
+        return {
+          id,
+          name: pokemon.name,
+        };
+      }
+    );
+
+  return {
+    count: data.count,
+    next: data.next,
+    previous: data.previous,
+    results,
+  };
+}
+
+// ==========================================
+// GET ONE - POKEAPI
+// ==========================================
 export async function getPokemon(pokemon: string): Promise<PokemonDetails> {
   const pokemonName = pokemon.trim().toLowerCase();
 
   if (!pokemonName) {
-    throw new Error("El nombre del Pokémon es requerido");
+    throw new Error(
+      "El nombre del Pokemon es requerido"
+    );
   }
 
-  const response = await fetch(`${POKE_API_URL}/pokemon/${pokemonName}`,
+  const response = await fetch(
+    `${POKE_API_URL}/pokemon/${pokemonName}`,
     {
       cache: "no-store",
     }
@@ -76,10 +125,14 @@ export async function getPokemon(pokemon: string): Promise<PokemonDetails> {
 
   if (!response.ok) {
     if (response.status === 404) {
-      throw new Error("Pokémon no encontrado");
+      throw new Error(
+        "Pokemon no encontrado"
+      );
     }
 
-    throw new Error("Error al consultar PokéAPI");
+    throw new Error(
+      "Error al consultar PokeAPI"
+    );
   }
 
   const data = await response.json();
@@ -89,16 +142,19 @@ export async function getPokemon(pokemon: string): Promise<PokemonDetails> {
     name: data.name,
     height: data.height,
     weight: data.weight,
-
     abilities: data.abilities,
     forms: data.forms,
     moves: data.moves,
     species: data.species,
     sprites: {
-      front_default: data.sprites.front_default,
-      front_shiny: data.sprites.front_shiny,
-      back_default: data.sprites.back_default,
-      back_shiny: data.sprites.back_shiny,
+      front_default:
+        data.sprites.front_default,
+      front_shiny:
+        data.sprites.front_shiny,
+      back_default:
+        data.sprites.back_default,
+      back_shiny:
+        data.sprites.back_shiny,
     },
     types: data.types,
   };
