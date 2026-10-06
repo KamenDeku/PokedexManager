@@ -23,11 +23,11 @@ enum TrainerStatus {
 // ==========================================
 
 model User {
-  id        Int  @id @default(autoincrement())
+  id        Int           @id @default(autoincrement())
   name      String
   password  String
-  role      TrainerStatus  @default(TRAINER)
-  createdAt DateTime  @default(now())
+  role      TrainerStatus @default(TRAINER)
+  createdAt DateTime      @default(now())
 
   collection Collection[]
 }
@@ -37,8 +37,8 @@ model User {
 // ==========================================
 
 model Pokemon {
-  id        Int  @id @default(autoincrement())
-  pokeApiId Int  @unique
+  id        Int      @id @default(autoincrement())
+  pokeApiId Int      @unique
   name      String
   createdAt DateTime @default(now())
 
@@ -50,13 +50,13 @@ model Pokemon {
 // ==========================================
 
 model Collection {
-  id        Int  @id @default(autoincrement())
+  id        Int              @id @default(autoincrement())
   userId    Int
   pokemonId Int
-  status    CollectionStatus  @default(CAUGHT)
-  createdAt  DateTime @default(now())
+  status    CollectionStatus @default(CAUGHT)
+  createdAt DateTime         @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   pokemon Pokemon @relation(fields: [pokemonId], references: [id])
 
   @@unique([userId, pokemonId])
