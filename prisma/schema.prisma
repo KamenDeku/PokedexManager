@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum CollectionStatus {
+  CAUGHT
+  NOT_CAUGHT
+}
+
+// ==========================================
+// USER
+// ==========================================
+
+model User {
+  id        Int  @id @default(autoincrement())
+  name      String
+  password  String
+  createdAt DateTime  @default(now())
+
+  collection Collection[]
+}
+
+// ==========================================
+// POKEMON
+// ==========================================
+
+model Pokemon {
+  id        Int  @id @default(autoincrement())
+  pokeApiId Int  @unique
+  name      String
+  createdAt DateTime @default(now())
+
+  collection Collection[]
+}
+
+// ==========================================
+// COLLECTION
+// ==========================================
+
+model Collection {
+  id        Int  @id @default(autoincrement())
+  userId    Int
+  pokemonId Int
+  status    CollectionStatus  @default(CAUGHT)
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  pokemon Pokemon @relation(fields: [pokemonId], references: [id])
+
+  @@unique([userId, pokemonId])
+}
