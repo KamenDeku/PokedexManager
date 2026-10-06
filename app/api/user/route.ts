@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { hashPassword } from "@/lib/password";
 
 // ==========================================
 // GET ALL USERS
@@ -59,10 +60,12 @@ export async function POST(request: Request) {
       );
     }
 
+    const hashedPassword = await hashPassword(password);
+    
     const user = await prisma.user.create({
       data: {
         name,
-        password,
+        password: hashedPassword,
         role: role || "TRAINER",
       },
       select: {

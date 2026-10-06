@@ -1,4 +1,4 @@
-const POKE_API_URL = "https://pokeapi.co/api/v2";
+const POKE_API_URL = process.env.POKE_API_URL || "https://pokeapi.co/api/v2";
 
 // ------------------------------------------
 // INFO

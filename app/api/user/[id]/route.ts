@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { hashPassword } from "@/lib/password";
 
 // ==========================================
-// GET /api/user/:id
+// GET USER
 // ==========================================
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
@@ -10,10 +11,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     const { id } = await context.params;
     const userId = Number(id);
 
-    if (
-      !Number.isInteger(userId) ||
-      userId <= 0
-    ) {
+    if (!Number.isInteger(userId) || userId <= 0) {
       return NextResponse.json(
         {
           error: "ID invalido",
@@ -59,7 +57,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
 }
 
 // ==========================================
-// PATCH /api/user/:id
+// PATCH USER
 // ==========================================
 export async function PATCH(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
@@ -100,13 +98,17 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
       );
     }
 
+    let hashedPassword: string | undefined;
+
+    if (password !== undefined) {hashedPassword = await hashPassword(password);}
+
     const user = await prisma.user.update({
         where: {
           id: userId,
         },
         data: {
           ...(name !== undefined && { name }),
-          ...(password !== undefined && { password }),
+          ...(hashedPassword !== undefined && { password: hashedPassword }),
           ...(role !== undefined && { role }),
         },
         select: {
