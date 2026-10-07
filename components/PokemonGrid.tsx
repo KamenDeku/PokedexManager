@@ -24,11 +24,13 @@ type PokemonGridProps = {
   type: string;
   page: number;
   setPage: (page: number) => void;
+  ownedIds: number[];
+  onOwnedChange: (pokeApiId: number, owned: boolean) => void;
 };
 
 const POKEMON_PER_PAGE = 20;
 
-export default function PokemonGrid({search, type, page, setPage,}: PokemonGridProps) {
+export default function PokemonGrid({search, type, page, setPage, ownedIds, onOwnedChange,}: PokemonGridProps) {
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
   const [totalPokemon, setTotalPokemon] = useState(0);
 
@@ -45,7 +47,6 @@ export default function PokemonGrid({search, type, page, setPage,}: PokemonGridP
         const params = new URLSearchParams();
 
         params.set( "limit", POKEMON_PER_PAGE.toString());
-
         params.set("offset", offset.toString());
 
         if (search.trim()) {
@@ -140,6 +141,8 @@ export default function PokemonGrid({search, type, page, setPage,}: PokemonGridP
           <PokemonCard
             key={item.id}
             pokemon={item}
+            owned={ownedIds.includes(item.id)}
+            onOwnedChange={onOwnedChange}
           />
         ))}
       </div>

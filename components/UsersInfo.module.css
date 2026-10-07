@@ -1,0 +1,157 @@
+.usersGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(190px, 1fr));
+
+  gap: 22px;
+}
+
+.userCard {
+  overflow: visible;
+
+  cursor: pointer;
+}
+
+.userCard:hover {
+  z-index: 5;
+}
+
+.userCard > div:first-child {
+  border-radius: 9px 9px 0 0;
+}
+
+.userRole {
+  display: block;
+
+  margin: 6px auto 0;
+
+  width: fit-content;
+
+  padding: 4px 12px;
+
+  border-radius: 999px;
+
+  background: rgba(0, 0, 0, 0.08);
+
+  color: #333;
+
+  font-size: 14px;
+
+  font-weight: 700;
+}
+
+.professor {
+  background: var(--pokemon-red);
+
+  color: var(--white);
+}
+
+.gearWrapper {
+  position: absolute;
+
+  top: 4px;
+
+  left: 8px;
+
+  z-index: 1;
+}
+
+.gearButton {
+  width: 28px;
+
+  height: 28px;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
+}
+
+.gearButton img {
+  width: 100%;
+
+  height: 100%;
+
+  display: block;
+
+  object-fit: contain;
+}
+
+.userMenu {
+  position: absolute;
+
+  top: calc(100% + 8px);
+
+  left: 0;
+
+  width: 150px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  padding: 6px;
+
+  background: var(--white);
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.menuOption {
+  padding: 10px 14px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: transparent;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.menuOption:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.usersMessage {
+  padding: 50px 20px;
+
+  color: var(--white);
+
+  text-align: center;
+
+  font-size: 18px;
+}
+
+.error {
+  color: #ffd6d6;
+}
+
+@media (max-width: 768px) {
+
+  .usersGrid {
+    grid-template-columns:
+      repeat(auto-fill, minmax(150px, 1fr));
+
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .usersGrid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+  }
+}

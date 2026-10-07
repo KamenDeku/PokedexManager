@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import LoginModal from "./LoginModal";
+import { pokemonTypes } from "@/lib/pokemonTypes";
 import styles from "./Navbar.module.css";
 
 type NavbarProps = {
@@ -9,42 +10,32 @@ type NavbarProps = {
   setSearch: (value: string) => void;
   type: string;
   setType: (value: string) => void;
+  view: "pokedex" | "collection" | "users";
+  setView: (value: "pokedex" | "collection" | "users") => void;
 };
 
-const pokemonTypes = [
-  { value: "normal", label: "Normal" },
-  { value: "fire", label: "Fuego" },
-  { value: "water", label: "Agua" },
-  { value: "electric", label: "Electrico" },
-  { value: "grass", label: "Planta" },
-  { value: "ice", label: "Hielo" },
-  { value: "fighting", label: "Lucha" },
-  { value: "poison", label: "Veneno" },
-  { value: "ground", label: "Tierra" },
-  { value: "flying", label: "Volador" },
-  { value: "psychic", label: "Psiquico" },
-  { value: "bug", label: "Bicho" },
-  { value: "rock", label: "Roca" },
-  { value: "ghost", label: "Fantasma" },
-  { value: "dragon", label: "Dragon" },
-  { value: "dark", label: "Siniestro" },
-  { value: "steel", label: "Acero" },
-  { value: "fairy", label: "Hada" },
-];
-
-export default function Navbar({search, setSearch, type, setType,}: NavbarProps) {
+export default function Navbar({search, setSearch, type, setType, view, setView,}: NavbarProps) {
 
   const [loginOpen, setLoginOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const { data: session } = useSession();
-  const isLoggedIn = !!session?.user;
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
-  // Cierra el menu al hacer clic fuera
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const userWrapperRef = useRef<HTMLDivElement>(null);
+
+  const { data: session } = useSession();
+
+  const isLoggedIn = !!session?.user;
+  const isProfessor = session?.user?.role === "PROFESSOR";
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (!wrapperRef.current?.contains(event.target as Node)) {
         setMenuOpen(false);
+      }
+
+      if (!userWrapperRef.current?.contains(event.target as Node)) {
+        setUserMenuOpen(false);
       }
     }
 
@@ -59,6 +50,27 @@ export default function Navbar({search, setSearch, type, setType,}: NavbarProps)
     setType(selectedType);
 
     setMenuOpen(false);
+  }
+
+  function handleLoginClick() {
+    if (!isLoggedIn) {
+      setLoginOpen(true);
+      return;
+    }
+  
+    setUserMenuOpen((value) => !value);
+  }
+  
+  function handleNavigate(value: "pokedex" | "collection" | "users") {
+    setView(value);
+  
+    setUserMenuOpen(false);
+  }
+  
+  function handleSignOut() {
+    setUserMenuOpen(false);
+  
+    signOut({ callbackUrl: "/" });
   }
 
   return (
@@ -136,21 +148,72 @@ export default function Navbar({search, setSearch, type, setType,}: NavbarProps)
 
         <div className={styles.navbarRight}>
 
-          <button className={styles.loginButton}
-            onClick={() => setLoginOpen(true)}
-            aria-label={
-              isLoggedIn ? "Usuario" : "Iniciar sesion"
-            }
-          >
-            <img
-              src={
-                isLoggedIn ? "/svg/pokeball.svg" : "/svg/pokeball-shadow.svg"
-              }
-              alt={
+          <div className={styles.userWrapper} ref={userWrapperRef}>
+
+            <button className={styles.loginButton}
+              type="button"
+              onClick={handleLoginClick}
+              aria-label={
                 isLoggedIn ? "Usuario" : "Iniciar sesion"
               }
-            />
-          </button>
+              aria-expanded={userMenuOpen}
+            >
+              <img
+                src={
+                  isLoggedIn ? "/svg/pokeball.svg" : "/svg/pokeball-shadow.svg"
+                }
+                alt={
+                  isLoggedIn ? "Usuario" : "Iniciar sesion"
+                }
+              />
+            </button>
+
+            {isLoggedIn && userMenuOpen && (
+              <div className={styles.userMenu}>
+
+                <span className={styles.userName}>
+                  {session?.user?.name}
+                </span>
+
+                <button className={`${styles.typeButton} ${view === "pokedex" ? styles.activeType : ""}`}
+                  type="button"
+                  onClick={() => handleNavigate("pokedex")}
+                >
+                  Pokedex
+                </button>
+
+                <button className={`${styles.typeButton} ${view === "collection" ? styles.activeType : ""}`}
+                  type="button"
+                  onClick={() => handleNavigate("collection")}
+                >
+                  Mi coleccion
+                </button>
+
+                {isProfessor && (
+                  <button className={`${styles.typeButton} ${view === "users" ? styles.activeType : ""}`}
+                    type="button"
+                    onClick={() => handleNavigate("users")}
+                  >
+                    Usuarios
+                  </button>
+                )}
+
+                <button className={`${styles.typeButton} ${styles.signOutButton}`}
+                  type="button"
+                  onClick={handleSignOut}
+                >
+                  <img
+                    className={styles.signOutIcon}
+                    src="/svg/salir.svg"
+                    alt=""
+                  />
+                    Cerrar sesion
+                  </button>
+
+              </div>
+            )}
+
+          </div>
 
         </div>
 

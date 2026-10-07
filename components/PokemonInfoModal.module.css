@@ -1,0 +1,279 @@
+.modalOverlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 2000;
+
+  display: flex;
+
+  align-items: center;
+  
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.pokemonInfoModal {
+  width: 100%;
+
+  max-width: 760px;
+
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  border-radius: 12px;
+
+  background: var(--card-blue);
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.pokemonInfoModalHeader {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 18px 20px;
+
+  background: var(--pokemon-red);
+
+  color: var(--white);
+}
+
+.pokemonInfoModalHeader h2 {
+  margin: 0;
+
+  font-size: 20px;
+
+  text-transform: capitalize;
+}
+
+.modalClose {
+  border: none;
+
+  background: transparent;
+
+  color: var(--white);
+
+  font-size: 28px;
+
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.pokemonInfoModalBody {
+  display: flex;
+
+  gap: 24px;
+
+  padding: 24px;
+}
+
+.gallery {
+  flex: 1;
+
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.viewer {
+  min-height: 260px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: 1px solid var(--metal-gray);
+
+  border-radius: 10px;
+
+  background: var(--white);
+}
+
+.viewerImage {
+  width: 220px;
+
+  height: 220px;
+
+  object-fit: contain;
+
+  image-rendering: pixelated;
+}
+
+.thumbnails {
+  display: flex;
+
+  gap: 8px;
+
+  overflow-x: auto;
+}
+
+.thumbnail {
+  flex-shrink: 0;
+
+  width: 64px;
+
+  height: 64px;
+
+  padding: 4px;
+
+  border: 2px solid transparent;
+
+  border-radius: 8px;
+
+  background: var(--white);
+
+  cursor: pointer;
+}
+
+.thumbnail img {
+  width: 100%;
+
+  height: 100%;
+
+  display: block;
+
+  object-fit: contain;
+
+  image-rendering: pixelated;
+}
+
+.activeThumbnail {
+  border-color: var(--pokemon-red);
+}
+
+.pokemonInfo {
+  flex: 1;
+
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.infoRow {
+  margin: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  text-transform: capitalize;
+}
+
+.infoLabel {
+  color: #4c4c4c;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+.typeList {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 6px;
+}
+
+.typeBadge {
+  padding: 4px 12px;
+
+  border-radius: 999px;
+
+  background: var(--pokemon-red);
+
+  color: var(--white);
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.message {
+  padding: 40px 20px;
+
+  text-align: center;
+}
+
+.confirmText {
+  margin: 0;
+}
+
+.error {
+  margin: 0;
+
+  color: var(--pokemon-red);
+
+  font-size: 14px;
+}
+
+.actionButton {
+  padding: 12px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  background: var(--pokemon-red);
+
+  color: var(--white);
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease;
+}
+
+.actionButton:hover {
+  background: var(--pokemon-red-dark);
+}
+
+.cancelButton {
+  padding: 12px;
+
+  border: 1px solid #c4c4c4;
+
+  border-radius: 7px;
+
+  background: transparent;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+
+  .pokemonInfoModalBody {
+    flex-direction: column;
+  }
+}

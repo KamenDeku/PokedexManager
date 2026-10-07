@@ -116,9 +116,7 @@ export async function DELETE(request: Request, context: {params: Promise<{ id: s
       return NextResponse.json(
         {
           error:
-            authResult.status === 401
-              ? "No autenticado"
-              : "No tienes permiso para realizar esta accion",
+            authResult.status === 401 ? "No autenticado" : "No tienes permiso para realizar esta accion",
         },
         {
           status: authResult.status,

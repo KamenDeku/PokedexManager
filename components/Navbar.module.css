@@ -270,6 +270,61 @@
   object-fit: contain;
 }
 
+.userWrapper {
+  position: relative;
+}
+
+.userMenu {
+  position: absolute;
+
+  top: calc(100% + 12px);
+
+  right: 0;
+
+  width: 200px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  padding: 6px;
+
+  background: var(--white);
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.25);
+
+  z-index: 1100;
+}
+
+.userName {
+  padding: 8px 14px;
+
+  font-weight: 700;
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  margin-bottom: 4px;
+}
+
+.signOutButton {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+.signOutIcon {
+  width: 18px;
+
+  height: 18px;
+
+  object-fit: contain;
+}
+
 @media (max-width: 768px) {
 
   .navbar {

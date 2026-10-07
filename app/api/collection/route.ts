@@ -23,12 +23,12 @@ export async function POST(request: Request) {
 
     const userId = Number(authResult.session.user.id);
     const body = await request.json();
-    const { pokemonId, } = body;
+    const { pokeApiId, name, } = body;
 
-    if (!pokemonId) {
+    if (!pokeApiId || !name) {
       return NextResponse.json(
         {
-          error: "pokemonId es requerido",
+          error: "pokeApiId y name es requerido",
         }, { status: 400 }
       );
     }
@@ -47,9 +47,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const pokemon = await prisma.pokemon.findUnique({
+    const pokemon = await prisma.pokemon.upsert({
         where: {
-          id: pokemonId,
+          pokeApiId,
+        },
+        
+        update: {},
+
+        create: {
+          pokeApiId,
+          name,
         },
       });
 
@@ -68,7 +75,7 @@ export async function POST(request: Request) {
         where: {
           userId_pokemonId: {
             userId,
-            pokemonId,
+            pokemonId: pokemon.id,
           },
         },
 
@@ -78,7 +85,7 @@ export async function POST(request: Request) {
 
         create: {
           userId,
-          pokemonId,
+          pokemonId: pokemon.id,
           status: "CAUGHT",
         },
 
@@ -107,7 +114,7 @@ export async function POST(request: Request) {
 // ==========================================
 // GET COLLECTIONS
 // ==========================================
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const authResult = await requireAuth();
 
@@ -123,7 +130,33 @@ export async function GET() {
       );
     }
 
-    const userId = Number(authResult.session.user.id);
+    const session = authResult.session;
+    const { searchParams } = new URL(request.url);
+    const userParam = searchParams.get("userId");
+
+    let userId = Number(session.user.id);
+
+    if (userParam) {
+      const targetId = Number(userParam);
+
+      if (!Number.isInteger(targetId) || targetId <= 0) {
+        return NextResponse.json(
+          {
+            error: "ID invalido",
+          }, { status: 400 }
+        );
+      }
+
+      if (targetId !== userId && session.user.role !== "PROFESSOR") {
+        return NextResponse.json(
+          {
+            error: "No tienes permiso para ver esta coleccion",
+          }, { status: 403 }
+        );
+      }
+
+      userId = targetId;
+    }
 
     const user = await prisma.user.findUnique({
         where: {

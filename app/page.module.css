@@ -1,5 +1,6 @@
 .landingPage {
   min-height: 100vh;
+
   background: var(--page-gray);
 }
 
@@ -33,6 +34,49 @@
   color: #eeeeee;
 
   font-size: 15px;
+}
+
+.backButton {
+  width: 42px;
+
+  height: 42px;
+
+  margin-bottom: 16px;
+
+  padding: 8px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: var(--white);
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.backButton:hover {
+  transform: scale(1.08);
+
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.backButton img {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: contain;
 }
 
 @media (max-width: 768px) {
