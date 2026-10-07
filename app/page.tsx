@@ -6,6 +6,7 @@ import styles from "./page.module.css";
 
 export default function Home() {
   const [search, setSearch] = useState("");
+  const [searchVersion, setSearchVersion] = useState(0);
 
   return (
     <main className={styles.landingPage}>
@@ -28,27 +29,6 @@ export default function Home() {
         <PokemonGrid
           search={search}
         />
-
-        <div className={styles.pagination}>
-
-          <button
-            className={styles.paginationButton}
-            disabled
-          >
-            ← Anterior
-          </button>
-
-          <span className={styles.pageNumber}>
-            Página 1
-          </span>
-
-          <button
-            className={styles.paginationButton}
-          >
-            Siguiente →
-          </button>
-
-        </div>
 
       </section>
 

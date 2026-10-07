@@ -26,9 +26,13 @@ type PokemonGridProps = {
   search: string;
 };
 
+const POKEMON_PER_PAGE = 20;
+
 export default function PokemonGrid({search,}: PokemonGridProps) {
 
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPokemon, setTotalPokemon] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -38,10 +42,11 @@ export default function PokemonGrid({search,}: PokemonGridProps) {
         setLoading(true);
         setError("");
 
+        const offset = (page - 1) * POKEMON_PER_PAGE;
         const params = new URLSearchParams();
 
-        params.set("limit", "20");
-        params.set("offset", "0");
+        params.set("limit", POKEMON_PER_PAGE.toString());
+        params.set("offset", offset.toString());
 
         if (search.trim()) {
           params.set("name", search.trim().toLowerCase());
@@ -50,18 +55,19 @@ export default function PokemonGrid({search,}: PokemonGridProps) {
         const response = await fetch(`/api/pokemon?${params.toString()}`);
 
         if (!response.ok) {
-          throw new Error("No se pudieron cargar los Pokémon");
+          throw new Error("No se pudieron cargar los Pokemon");
         }
 
         const data: PokemonApiResponse = await response.json();
-        const formattedPokemon = data.results.map((item) => {
 
+        setTotalPokemon(data.count);
+
+        const formattedPokemon = data.results.map((item) => {
             return {
               id: item.id,
               name: item.name,
               sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${item.id}.png`,
             };
-
           });
 
         setPokemon(formattedPokemon);
@@ -84,7 +90,21 @@ export default function PokemonGrid({search,}: PokemonGridProps) {
 
     loadPokemon();
 
-  }, [search]);
+  }, [search, page]);
+
+  const totalPages = Math.ceil(totalPokemon / POKEMON_PER_PAGE);
+
+  function handlePreviousPage() {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  }
+
+  function handleNextPage() {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  }
 
   if (loading) {
     return (
@@ -96,7 +116,7 @@ export default function PokemonGrid({search,}: PokemonGridProps) {
 
   if (error) {
     return (
-      <div className={styles.pokemonMessage + " " + styles.error}>
+      <div className={`${styles.pokemonMessage} ${styles.error}`}>
         {error}
       </div>
     );
@@ -105,22 +125,43 @@ export default function PokemonGrid({search,}: PokemonGridProps) {
   if (pokemon.length === 0) {
     return (
       <div className={styles.pokemonMessage}>
-        No se encontraron Pokémon.
+        No se encontraron Pokemones.
       </div>
     );
   }
 
   return (
-    <div className={styles.pokemonGrid}>
+    <>
+      <div className={styles.pokemonGrid}>
+        {pokemon.map((item) => (
+          <PokemonCard
+            key={item.id}
+            pokemon={item}
+          />
+        ))}
+      </div>
 
-      {pokemon.map((item) => (
-        <PokemonCard
-          key={item.id}
-          pokemon={item}
-        />
+      <div className={styles.pagination}>
+        <button
+          className={styles.paginationButton}
+          onClick={handlePreviousPage}
+          disabled={page === 1}
+        >
+          ← Anterior
+        </button>
 
-      ))}
+        <span className={styles.pageNumber}>
+          Página {page} de {totalPages}
+        </span>
 
-    </div>
+        <button
+          className={styles.paginationButton}
+          onClick={handleNextPage}
+          disabled={page === totalPages}
+        >
+          Siguiente →
+        </button>
+      </div>
+    </>
   );
 }
