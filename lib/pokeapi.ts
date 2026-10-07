@@ -69,6 +69,11 @@ export interface PokemonDetails {
   types: PokemonType[];
 }
 
+export interface PokemonTypeListItem {
+  id: number;
+  name: string;
+}
+
 // ==========================================
 // GET ALL - POKEAPI
 // ==========================================
@@ -172,4 +177,55 @@ export async function getPokemon(pokemon: string): Promise<PokemonDetails> {
 
     types: data.types,
   };
+}
+
+// ==========================================
+// GET BY TYPE - POKEAPI
+// ==========================================
+export async function getPokemonByType(
+  type: string
+): Promise<PokemonListItem[]> {
+  const pokemonType = type.trim().toLowerCase();
+
+  if (!pokemonType) {
+    throw new Error("El tipo de Pokemon es requerido");
+  }
+
+  const response = await fetch(
+    `${POKE_API_URL}/type/${pokemonType}`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error("Tipo no encontrado");
+    }
+
+    throw new Error("Error al consultar PokeAPI");
+  }
+
+  const data = await response.json();
+
+  return data.pokemon.map(
+    (item: {
+      pokemon: {
+        name: string;
+        url: string;
+      };
+    }) => {
+      const id = Number(
+        item.pokemon.url
+          .split("/")
+          .filter(Boolean)
+          .pop()
+      );
+
+      return {
+        id,
+        name: item.pokemon.name,
+      };
+    }
+  );
 }
