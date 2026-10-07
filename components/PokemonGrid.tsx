@@ -142,8 +142,7 @@ export default function PokemonGrid({search,}: PokemonGridProps) {
       </div>
 
       <div className={styles.pagination}>
-        <button
-          className={styles.paginationButton}
+        <button className={styles.paginationButton}
           onClick={handlePreviousPage}
           disabled={page === 1}
         >
@@ -154,8 +153,7 @@ export default function PokemonGrid({search,}: PokemonGridProps) {
           Página {page} de {totalPages}
         </span>
 
-        <button
-          className={styles.paginationButton}
+        <button className={styles.paginationButton}
           onClick={handleNextPage}
           disabled={page === totalPages}
         >

@@ -20,7 +20,7 @@ export default function Home() {
         <div className={styles.sectionHeader}>
 
           <p>
-            Explora Pokémon y descubre tu próximo
+            Explora Pokemon y descubre tu próximo
             compañero.
           </p>
 

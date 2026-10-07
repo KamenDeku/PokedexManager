@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import LoginModal from "./LoginModal";
 import styles from "./Navbar.module.css";
 
@@ -8,6 +9,9 @@ type NavbarProps = { search: string; setSearch: (value: string) => void;};
 export default function Navbar({search, setSearch,}: NavbarProps) {
 
   const [loginOpen, setLoginOpen] = useState(false);
+  const { data: session } = useSession();
+  const isLoggedIn = !!session?.user;
+
 
   return (
     <>
@@ -28,7 +32,7 @@ export default function Navbar({search, setSearch,}: NavbarProps) {
             <span className={styles.searchIcon}>
               <img
                 src="/svg/lupa.svg"
-                alt="Iniciar sesión"
+                alt="Buscador"
               />
             </span>
 
@@ -46,15 +50,20 @@ export default function Navbar({search, setSearch,}: NavbarProps) {
 
         <div className={styles.navbarRight}>
 
-          <button
-            className={styles.loginButton}
+          <button className={styles.loginButton}
             onClick={() => setLoginOpen(true)}
-            aria-label="Iniciar sesión"
+            aria-label={
+              isLoggedIn ? "Usuario" : "Iniciar sesion"
+            }
           >
 
-            <img
-              src="/svg/pokeball.svg"
-              alt="Iniciar sesión"
+          <img
+              src={
+                isLoggedIn ? "/svg/pokeball.svg" : "/svg/pokeball-shadow.svg"
+              }
+              alt={
+                isLoggedIn ? "Usuario" : "Iniciar sesión"
+              }
             />
 
           </button>

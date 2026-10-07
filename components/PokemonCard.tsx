@@ -20,10 +20,9 @@ export default function PokemonCard({pokemon,}: PokemonCardProps) {
       </div>
 
       <div className={styles.pokemonImageContainer}>
-        <img
+        <img className={styles.pokemonImage}
           src={pokemon.sprite}
           alt={pokemon.name}
-          className={styles.pokemonImage}
         />
       </div>
 

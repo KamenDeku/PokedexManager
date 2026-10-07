@@ -1,5 +1,6 @@
 "use client";
 import { FormEvent, useState } from "react";
+import { signIn, useSession } from "next-auth/react";
 import styles from "./LoginModal.module.css";
 
 type LoginModalProps = {
@@ -8,18 +9,46 @@ type LoginModalProps = {
 };
 
 export default function LoginModal({isOpen, onClose,}: LoginModalProps) {
-
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  const { update } = useSession();
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    console.log({
-      name,
-      password,
-    });
+    setError("");
+    setLoading(true);
+
+    try {
+      const result = await signIn("credentials", {
+        name,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError("Usuario o contraseña incorrectos.");
+        return;
+      }
+
+      await update();
+      onClose();
+
+      setName("");
+      setPassword("");
+    } catch (error) {
+      console.error("Error al iniciar sesion:", error);
+
+      setError(
+        "Error al iniciar sesion."
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (!isOpen) {
@@ -27,39 +56,29 @@ export default function LoginModal({isOpen, onClose,}: LoginModalProps) {
   }
 
   return (
-    <div
-      className={styles.modalOverlay}
+    <div className={styles.modalOverlay}
       onClick={onClose}
     >
-
-      <div
-        className={styles.loginModal}
+      <div className={styles.loginModal}
         onClick={(event) =>
           event.stopPropagation()
         }
       >
-
         <div className={styles.loginModalHeader}>
+          <h2>Iniciar sesión</h2>
 
-          <h2>
-            Iniciar sesión
-          </h2>
-
-          <button
-            className={styles.modalClose}
+          <button className={styles.modalClose}
+            type="button"
             onClick={onClose}
             aria-label="Cerrar"
           >
             ×
           </button>
-
         </div>
 
-        <form
+        <form className={styles.loginForm}
           onSubmit={handleSubmit}
-          className={styles.loginForm}
         >
-
           <label htmlFor="username">
             Usuario
           </label>
@@ -71,8 +90,9 @@ export default function LoginModal({isOpen, onClose,}: LoginModalProps) {
             onChange={(event) =>
               setName(event.target.value)
             }
-            placeholder="Tu usuario"
+            placeholder="Usuario"
             required
+            disabled={loading}
           />
 
           <label htmlFor="password">
@@ -86,21 +106,27 @@ export default function LoginModal({isOpen, onClose,}: LoginModalProps) {
             onChange={(event) =>
               setPassword(event.target.value)
             }
-            placeholder="Tu contraseña"
+            placeholder="Contraseña"
             required
+            disabled={loading}
           />
 
-          <button
+          {error && (
+            <p className={styles.error}>
+              {error}
+            </p>
+          )}
+
+          <button className={styles.loginSubmit}
             type="submit"
-            className={styles.loginSubmit}
+            disabled={loading}
           >
-            Iniciar sesión
+
+            {loading ? "Iniciando sesión..." : "Iniciar sesión"}
+
           </button>
-
         </form>
-
       </div>
-
     </div>
   );
 }
