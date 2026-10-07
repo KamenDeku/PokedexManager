@@ -1,29 +1,43 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/authorization";
 
 // ==========================================
 // POST COLLECTION
 // ==========================================
-
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
 
-    const { userId, pokemonId,} = body;
+    const authResult = await requireAuth();
 
-    if (!userId || !pokemonId) {
+    if (!authResult.session) {
       return NextResponse.json(
         {
-          error: "userId y pokemonId son requeridos",
+          error: "No autenticado",
+        },
+        {
+          status: authResult.status,
+        }
+      );
+    }
+
+    const userId = Number(authResult.session.user.id);
+    const body = await request.json();
+    const { pokemonId, } = body;
+
+    if (!pokemonId) {
+      return NextResponse.json(
+        {
+          error: "pokemonId es requerido",
         }, { status: 400 }
       );
     }
 
     const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
+        where: {
+          id: userId,
+        },
+      });
 
     if (!user) {
       return NextResponse.json(
@@ -34,10 +48,10 @@ export async function POST(request: Request) {
     }
 
     const pokemon = await prisma.pokemon.findUnique({
-      where: {
-        id: pokemonId,
-      },
-    });
+        where: {
+          id: pokemonId,
+        },
+      });
 
     if (!pokemon) {
       return NextResponse.json(
@@ -46,26 +60,32 @@ export async function POST(request: Request) {
         }, { status: 404 }
       );
     }
-    
+
+    // ==========================================
+    // CREATE / UPDATE COLLECTION
+    // ==========================================
     const collection = await prisma.collection.upsert({
-      where: {
-        userId_pokemonId: {
+        where: {
+          userId_pokemonId: {
+            userId,
+            pokemonId,
+          },
+        },
+
+        update: {
+          status: "CAUGHT",
+        },
+
+        create: {
           userId,
           pokemonId,
+          status: "CAUGHT",
         },
-      },
-      update: {
-        status: "CAUGHT",
-      },
-      create: {
-        userId,
-        pokemonId,
-        status: "CAUGHT",
-      },
-      include: {
-        pokemon: true,
-      },
-    });
+
+        include: {
+          pokemon: true,
+        },
+      });
 
     return NextResponse.json(
       collection,
@@ -85,31 +105,34 @@ export async function POST(request: Request) {
 }
 
 // ==========================================
-// GET ONE - COLLECTION
+// GET COLLECTIONS
 // ==========================================
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
+    const authResult = await requireAuth();
 
-    const userId =
-      Number(searchParams.get("userId"));
+    if (!authResult.session) {
 
-    if (!userId) {
       return NextResponse.json(
         {
-          error: "userId es requerido",
+          error: "No autenticado",
         },
-        { status: 400 }
+        {
+          status: authResult.status,
+        }
       );
     }
 
+    const userId = Number(authResult.session.user.id);
+
     const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
+        where: {
+          id: userId,
+        },
+      });
 
     if (!user) {
+
       return NextResponse.json(
         {
           error: "Usuario no encontrado",
@@ -117,28 +140,22 @@ export async function GET(request: Request) {
       );
     }
 
-    const collection =
-      await prisma.collection.findMany({
+    const collection = await prisma.collection.findMany({
         where: {
           userId,
           status: "CAUGHT",
         },
+
         include: {
           pokemon: true,
         },
+
         orderBy: {
           pokemon: {
             pokeApiId: "asc",
           },
         },
       });
-    
-    if (collection.length === 0) {
-      return NextResponse.json(
-        "Coleccion vacia",
-        { status: 200 }
-      );
-    }
 
     return NextResponse.json(
       collection,
@@ -152,7 +169,7 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         error: "Error interno del servidor",
-      },{ status: 500 }
+      }, { status: 500 }
     );
   }
 }
