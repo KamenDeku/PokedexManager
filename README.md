@@ -67,6 +67,16 @@ BCRYPT_SALT_ROUNDS=14
 AUTH_SECRET="valor-generado-para-este-entorno"
 POKE_API_URL="https://pokeapi.co/api/v2"
 NEXT_PUBLIC_ITEMS_PER_PAGE=20
+
+# Configuracion del Asistente de Inteligencia Artificial
+AI_API_KEY="tu-api-key-de-gemini"
+AI_API_URL="[https://generativelanguage.googleapis.com/v1beta/openai/chat/completions](https://generativelanguage.googleapis.com/v1beta/openai/chat/completions)"
+AI_MODEL="gemini-3.5-flash"
+```
+
+Nota: Puedes listar los modelos de IA compatibles con tu configuración actual ejecutando el siguiente comando:
+```bash
+node --env-file=.env scripts/list-models.mjs
 ```
 
 Genera un valor para `AUTH_SECRET` con:
@@ -92,7 +102,7 @@ pnpm exec prisma migrate dev
 pnpm run seed
 ```
 
-El seed crea usuarios y colecciones de prueba. Para iniciar sesion puedes usar `Professor Oak` con contrasena `oak123` o `Ash Ketchum` con contrasena `ash123`. Estas credenciales son solo para desarrollo local.
+El seed crea usuarios y colecciones de prueba. Para iniciar sesion puedes usar `Professor Oak` con contrasena `oak123` y rol `PROFESSOR` o `Ash Ketchum` con contrasena `ash123` y rol `TRAINER`. Estas credenciales son solo para desarrollo local.
 
 8. Inicia el servidor de desarrollo:
 ```bash
@@ -102,3 +112,31 @@ pnpm dev
 Abre [http://localhost:3000](http://localhost:3000) en el navegador.
 
 Para iniciar sesión, haz clic en el logo de la Pokébola ubicado en la esquina superior derecha de la pantalla. Ten en cuenta que también puedes navegar y utilizar todas las funciones de busqueda de la aplicación de forma libre sin necesidad de iniciar sesión.
+
+## Chat de IA: Implementacion y Arquitectura
+El proyecto incluye un Chat de Inteligencia Artificial (compatible con modelos como Claude o Gemini) para ayudarte a gestionar tu PokeDex. En lugar de inyectar toda la colección del usuario en el prompt, la IA utiliza function calling (tool use). El modelo decide de forma autónoma qué información necesita y el backend ejecuta las consultas interactuando con Prisma y la PokeAPI.
+Capacidades del Asistente (Lo que puede hacer)
+
+### Con tu coleccion (get_my_collection):
+- Informarte de cuántos y cuáles Pokémon posees.
+- Contabilizar la distribución de tipos para detectar debilidades en tu equipo.
+- Analizar tus capturas ("¿qué tipos me faltan?", "¿tengo algo bueno contra el tipo Roca?").
+
+### Con la informacion de un Pokemon (get_pokemon_info):
+- Proporcionar tipos, habilidades (marcando claramente cuáles son ocultas), altura y peso.
+- Indicar la cantidad total de movimientos que puede aprender y mostrar 10 ejemplos.
+- Permite búsquedas flexibles utilizando el nombre en inglés o el número de la Pokédex.
+
+### Con recomendaciones (get_pokemon_by_type):
+- Listar hasta 30 Pokémon de un tipo en específico que aún no formen parte de tu colección.
+- Cruzar estos datos con tu equipo actual para sugerir qué capturas priorizar y explicar el motivo estratégico.
+
+### Interaccion conversacional:
+- Mantiene el contexto de los últimos 20 mensajes (puedes preguntar "¿y ese cuánto pesa?" y entenderá a qué Pokémon te refieres).
+- Formatea sus respuestas usando Markdown para mejor legibilidad.
+- Maneja el límite de peticiones de la API (rate limit) de forma controlada y con mensajes amigables.
+
+## Limitaciones y Consideraciones Tecnicas (Lo que NO puede hacer)
+### Restricciones de acciones y privacidad:
+- Solo lectura: No tiene capacidad para agregar, eliminar ni liberar Pokémon.
+- Filtrado de estado: Ignora los Pokémon con estado RELEASED, contabilizando únicamente los CAUGHT.

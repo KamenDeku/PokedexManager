@@ -221,9 +221,7 @@ export async function DELETE(request: Request, context: {params: Promise<{ id: s
       return NextResponse.json(
         {
           error:
-            authResult.status === 401
-              ? "No autenticado"
-              : "No tienes permiso para realizar esta accion",
+            authResult.status === 401 ? "No autenticado" : "No tienes permiso para realizar esta accion",
         },
         {
           status: authResult.status,
@@ -255,6 +253,14 @@ export async function DELETE(request: Request, context: {params: Promise<{ id: s
         {
           error: "Usuario no encontrado",
         }, { status: 404 }
+      );
+    }
+
+    if (Number(authResult.session.user.id) === userId) {
+      return NextResponse.json(
+        {
+          error: "No puedes eliminarte a ti mismo",
+        }, { status: 403 }
       );
     }
 

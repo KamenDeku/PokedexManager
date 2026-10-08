@@ -203,7 +203,7 @@ export default function UsersInfo({search, role, page, setPage, onSelectUser,}: 
                   aria-expanded={menuUserId === user.id}
                 >
                   <img
-                    src="/svg/modificar.svg"
+                    src="/svg/editar.svg"
                     alt="Opciones"
                   />
                 </button>
@@ -215,13 +215,21 @@ export default function UsersInfo({search, role, page, setPage, onSelectUser,}: 
                       type="button"
                       onClick={() => handleOption(user, "edit")}
                     >
-                      Modificar
+                      <img
+                        src="/svg/actualizar.svg"
+                        alt=""
+                      />
+                      Editar
                     </button>
 
                     <button className={styles.menuOption}
                       type="button"
                       onClick={() => handleOption(user, "delete")}
                     >
+                      <img
+                        src="/svg/borrar.svg"
+                        alt=""
+                      />
                       Borrar
                     </button>
 

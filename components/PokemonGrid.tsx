@@ -61,7 +61,7 @@ export default function PokemonGrid({search, type, page, setPage, ownedIds, onOw
 
         if (!response.ok) {
           throw new Error(
-            "No se pudieron cargar los Pokemon"
+            "No se pudieron cargar los Pokemones"
           );
         }
 
@@ -84,7 +84,7 @@ export default function PokemonGrid({search, type, page, setPage, ownedIds, onOw
         console.error(error);
 
         setError(
-          "No se pudieron cargar los Pokemon."
+          "No se pudieron cargar los Pokemones"
         );
       } finally {
         setLoading(false);

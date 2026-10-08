@@ -186,6 +186,11 @@ export default function Navbar({search, setSearch, type, setType, view, setView,
                   type="button"
                   onClick={() => handleNavigate("pokedex")}
                 >
+                  <img
+                    className={styles.signOutIcon}
+                    src="/svg/pokedex.svg"
+                    alt=""
+                  />
                   Pokedex
                 </button>
 
@@ -193,7 +198,12 @@ export default function Navbar({search, setSearch, type, setType, view, setView,
                   type="button"
                   onClick={() => handleNavigate("collection")}
                 >
-                  Mi coleccion
+                  <img
+                    className={styles.signOutIcon}
+                    src="/svg/pc.svg"
+                    alt=""
+                  />
+                  PC
                 </button>
 
                 {isProfessor && (
@@ -201,6 +211,11 @@ export default function Navbar({search, setSearch, type, setType, view, setView,
                     type="button"
                     onClick={() => handleNavigate("users")}
                   >
+                    <img
+                      className={styles.signOutIcon}
+                      src="/svg/usuarios.svg"
+                      alt=""
+                    />
                     Usuarios
                   </button>
                 )}

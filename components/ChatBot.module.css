@@ -1,0 +1,330 @@
+.chatButton {
+  position: fixed;
+
+  right: 24px;
+
+  bottom: 24px;
+
+  z-index: 1000;
+
+  width: 64px;
+
+  height: 64px;
+
+  padding: 0px;
+
+  border: 2px solid rgba(255, 255, 255, 0.7);
+
+  border-radius: 50%;
+
+  background: var(--white);
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  overflow: hidden;
+}
+
+.chatButton:hover {
+  transform: scale(1.08);
+
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.chatButton img {
+  width: 100%;
+
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.chatWindow {
+  position: fixed;
+
+  right: 24px;
+
+  bottom: 100px;
+
+  z-index: 1000;
+
+  width: 360px;
+
+  height: 480px;
+
+  max-height: calc(100vh - 200px);
+
+  display: flex;
+
+  flex-direction: column;
+
+  background: var(--white);
+
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.chatHeader {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 12px 16px;
+
+  background: var(--pokemon-red);
+
+  color: var(--white);
+}
+
+.chatTitle {
+  font-size: 16px;
+
+  font-weight: 700;
+}
+
+.closeButton {
+  width: 28px;
+
+  height: 28px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: var(--white);
+
+  font-size: 16px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.chatMessages {
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+
+  padding: 12px;
+
+  overflow-y: auto;
+}
+
+.message {
+  max-width: 85%;
+
+  padding: 8px 12px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+
+  line-height: 1.4;
+
+  word-break: break-word;
+}
+
+.userMessage {
+  align-self: flex-end;
+
+  background: var(--pokemon-red);
+
+  color: var(--white);
+
+  white-space: pre-wrap;
+}
+
+.botMessage {
+  align-self: flex-start;
+
+  background: #eeeeee;
+
+  color: #222222;
+}
+
+.botMessage p {
+  margin: 0 0 8px;
+}
+
+.botMessage p:last-child {
+  margin-bottom: 0;
+}
+
+.botMessage ul,
+.botMessage ol {
+  margin: 0 0 8px;
+
+  padding-left: 20px;
+}
+
+.botMessage li {
+  margin-bottom: 4px;
+}
+
+.botMessage h1,
+.botMessage h2,
+.botMessage h3,
+.botMessage h4 {
+  margin: 8px 0 6px;
+
+  font-size: 15px;
+
+  font-weight: 700;
+}
+
+.botMessage strong {
+  font-weight: 700;
+}
+
+.botMessage hr {
+  margin: 10px 0;
+
+  border: none;
+
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.botMessage table {
+  width: 100%;
+
+  margin-bottom: 8px;
+
+  border-collapse: collapse;
+
+  font-size: 13px;
+}
+
+.botMessage th,
+.botMessage td {
+  padding: 4px 6px;
+
+  border: 1px solid rgba(0, 0, 0, 0.15);
+
+  text-align: left;
+}
+
+.chatInputRow {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 10px;
+
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.chatInputRow input {
+  flex: 1;
+
+  min-width: 0;
+
+  padding: 10px 14px;
+
+  border: 1px solid rgba(0, 0, 0, 0.2);
+
+  border-radius: 999px;
+
+  outline: none;
+
+  background: var(--white);
+
+  color: #222222;
+
+  font-size: 14px;
+}
+
+.chatInputRow input:focus {
+  border-color: var(--pokemon-red);
+}
+
+.sendButton {
+  padding: 10px 16px;
+
+  border: none;
+
+  border-radius: 999px;
+
+  background: var(--pokemon-red);
+
+  color: var(--white);
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.sendButton:hover {
+  transform: scale(1.05);
+}
+
+.sendButton:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+@media (max-width: 480px) {
+
+  .chatButton {
+    right: 16px;
+
+    bottom: 16px;
+
+    width: 56px;
+
+    height: 56px;
+  }
+
+  .chatWindow {
+    right: 12px;
+
+    bottom: 84px;
+
+    width: calc(100vw - 24px);
+
+    height: 70vh;
+  }
+
+  .chatInputRow input {
+    font-size: 16px;
+  }
+}

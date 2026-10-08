@@ -126,6 +126,22 @@
   text-align: left;
 
   cursor: pointer;
+
+  display: flex;
+
+  gap: 10px;
+
+  border-bottom: 1px solid var(--metal-gray);
+}
+
+.menuOption img {
+  width: 18px;
+
+  height: 18px;
+
+  flex-shrink: 0;
+
+  object-fit: contain;
 }
 
 .menuOption:hover {

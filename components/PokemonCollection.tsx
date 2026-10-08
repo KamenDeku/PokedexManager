@@ -80,7 +80,7 @@ export default function PokemonCollection({userId, search, type, page, setPage,}
         console.error(error);
 
         setError(
-          "No se pudo cargar la coleccion."
+          "No se pudo cargar la coleccion"
         );
       } finally {
         setLoading(false);
