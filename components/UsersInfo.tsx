@@ -178,8 +178,13 @@ export default function UsersInfo({search, role, page, setPage, onSelectUser,}: 
             </div>
 
             <div className={cardStyles.pokemonImageContainer}>
-              <img className={cardStyles.pokemonImage}
-                src="/svg/pokeball.svg"
+              <img
+                className={cardStyles.pokemonImage}
+                src={
+                  user.role === "PROFESSOR"
+                    ? "/svg/ultraball.svg"
+                    : "/svg/pokeball.svg"
+                }
                 alt={user.name}
               />
             </div>

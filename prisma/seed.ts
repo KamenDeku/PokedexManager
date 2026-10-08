@@ -204,6 +204,426 @@ const pokemons = [
   },
 ];
 
+// ==========================================
+// CHAT MESSAGES
+// ==========================================
+
+const chatMessages = [
+  // ==========================================
+  // PROFESSOR OAK
+  // ==========================================
+  {
+    userId: 1,
+    role: "USER" as const,
+    content: "Hola Rotom, mi Pokemon favorito es Bulbasaur.",
+  },
+  {
+    userId: 1,
+    role: "ASSISTANT" as const,
+    content:
+      "¡Entendido! Recordare que Bulbasaur es tu Pokemon favorito. Es una excelente eleccion, especialmente si te gustan los Pokemon de tipo Planta y Veneno.",
+  },
+  {
+    userId: 1,
+    role: "USER" as const,
+    content: "¿Que Pokemon de tipo Planta me recomiendas para mi coleccion?",
+  },
+  {
+    userId: 1,
+    role: "ASSISTANT" as const,
+    content:
+      "Como ya tienes a Bulbasaur, te recomiendo buscar Pokemon de tipo Planta que complementen tu coleccion. Podemos revisar cuales tienes actualmente y buscar opciones diferentes.",
+  },
+  {
+    userId: 1,
+    role: "USER" as const,
+    content: "Prefiero respuestas cortas cuando te pregunte por Pokemon.",
+  },
+  {
+    userId: 1,
+    role: "ASSISTANT" as const,
+    content:
+      "Perfecto. Intentare mantener mis respuestas cortas cuando hablemos de Pokemon.",
+  },
+
+  // ==========================================
+  // ASH KETCHUM
+  // ==========================================
+  {
+    userId: 2,
+    role: "USER" as const,
+    content: "Rotom, me gustan mucho los Pokemon de tipo Fuego.",
+  },
+  {
+    userId: 2,
+    role: "ASSISTANT" as const,
+    content:
+      "¡Genial! Tomare en cuenta que te gustan los Pokemon de tipo Fuego cuando te haga recomendaciones.",
+  },
+  {
+    userId: 2,
+    role: "USER" as const,
+    content: "¿Que Pokemon me falta para completar mejor mi coleccion?",
+  },
+  {
+    userId: 2,
+    role: "ASSISTANT" as const,
+    content:
+      "Revisare tu coleccion y buscare Pokemon que complementen los tipos que tienes menos representados.",
+  },
+  {
+    userId: 2,
+    role: "USER" as const,
+    content: "Tambien me gusta mucho Charizard.",
+  },
+  {
+    userId: 2,
+    role: "ASSISTANT" as const,
+    content:
+      "Lo tendre en cuenta. Charizard es uno de tus Pokemon favoritos.",
+  },
+
+  // ==========================================
+  // MISTY
+  // ==========================================
+  {
+    userId: 3,
+    role: "USER" as const,
+    content: "Me gustan los Pokemon de tipo Agua.",
+  },
+  {
+    userId: 3,
+    role: "ASSISTANT" as const,
+    content:
+      "¡Perfecto! Lo recordare para futuras recomendaciones de Pokemon.",
+  },
+  {
+    userId: 3,
+    role: "USER" as const,
+    content: "Psyduck es uno de mis favoritos.",
+  },
+  {
+    userId: 3,
+    role: "ASSISTANT" as const,
+    content:
+      "¡Buena eleccion! Recordare que Psyduck es uno de tus Pokemon favoritos.",
+  },
+  {
+    userId: 3,
+    role: "USER" as const,
+    content: "¿Tengo buenos Pokemon de Agua en mi coleccion?",
+  },
+  {
+    userId: 3,
+    role: "ASSISTANT" as const,
+    content:
+      "Si. Tienes varios Pokemon de Agua en tu coleccion, incluyendo Squirtle y Psyduck.",
+  },
+
+  // ==========================================
+  // BROCK
+  // ==========================================
+  {
+    userId: 4,
+    role: "USER" as const,
+    content: "Me gustan los Pokemon fuertes y resistentes.",
+  },
+  {
+    userId: 4,
+    role: "ASSISTANT" as const,
+    content:
+      "Entendido. Tomare en cuenta que prefieres Pokemon resistentes al hacer recomendaciones.",
+  },
+  {
+    userId: 4,
+    role: "USER" as const,
+    content: "¿Que Pokemon de mi coleccion son los mas resistentes?",
+  },
+  {
+    userId: 4,
+    role: "ASSISTANT" as const,
+    content:
+      "Snorlax es una de las opciones que destaca por su gran resistencia. Tambien puedo revisar otros Pokemon de tu coleccion.",
+  },
+
+  // ==========================================
+  // GARY OAK
+  // ==========================================
+  {
+    userId: 5,
+    role: "USER" as const,
+    content: "Prefiero que me recomiendes Pokemon que no tenga.",
+  },
+  {
+    userId: 5,
+    role: "ASSISTANT" as const,
+    content:
+      "De acuerdo. Cuando te haga recomendaciones revisare primero tu coleccion para evitar Pokemon que ya tengas.",
+  },
+  {
+    userId: 5,
+    role: "USER" as const,
+    content: "Mew y Mewtwo son mis favoritos.",
+  },
+  {
+    userId: 5,
+    role: "ASSISTANT" as const,
+    content:
+      "Lo recordare. Mew y Mewtwo son tus Pokemon favoritos.",
+  },
+
+  // ==========================================
+  // MAY
+  // ==========================================
+  {
+    userId: 6,
+    role: "USER" as const,
+    content: "Me gustan los Pokemon de Johto.",
+  },
+  {
+    userId: 6,
+    role: "ASSISTANT" as const,
+    content:
+      "¡Perfecto! Tomare en cuenta tu preferencia por Pokemon de Johto.",
+  },
+  {
+    userId: 6,
+    role: "USER" as const,
+    content: "Cyndaquil es mi favorito.",
+  },
+  {
+    userId: 6,
+    role: "ASSISTANT" as const,
+    content:
+      "Entendido. Recordare que Cyndaquil es tu Pokemon favorito.",
+  },
+
+  // ==========================================
+  // DAWN
+  // ==========================================
+  {
+    userId: 7,
+    role: "USER" as const,
+    content: "Me gustan los Pokemon lindos.",
+  },
+  {
+    userId: 7,
+    role: "ASSISTANT" as const,
+    content:
+      "¡Entendido! Puedo tener en cuenta esa preferencia cuando te recomiende Pokemon.",
+  },
+  {
+    userId: 7,
+    role: "USER" as const,
+    content: "Togepi me encanta.",
+  },
+  {
+    userId: 7,
+    role: "ASSISTANT" as const,
+    content:
+      "Lo recordare. Togepi es uno de tus Pokemon favoritos.",
+  },
+
+  // ==========================================
+  // SERENA
+  // ==========================================
+  {
+    userId: 8,
+    role: "USER" as const,
+    content: "Me gustan mucho Umbreon y Eevee.",
+  },
+  {
+    userId: 8,
+    role: "ASSISTANT" as const,
+    content:
+      "¡Buena eleccion! Recordare que te gustan especialmente Umbreon y Eevee.",
+  },
+  {
+    userId: 8,
+    role: "USER" as const,
+    content: "Quiero completar una coleccion de Pokemon de tipo Oscuro.",
+  },
+  {
+    userId: 8,
+    role: "ASSISTANT" as const,
+    content:
+      "Perfecto. Puedo ayudarte a buscar Pokemon de tipo Oscuro que aun no tengas.",
+  },
+
+  // ==========================================
+  // CLEMONT
+  // ==========================================
+  {
+    userId: 9,
+    role: "USER" as const,
+    content: "Me interesan los Pokemon de tipo Electrico.",
+  },
+  {
+    userId: 9,
+    role: "ASSISTANT" as const,
+    content:
+      "Lo tendre en cuenta para futuras recomendaciones.",
+  },
+  {
+    userId: 9,
+    role: "USER" as const,
+    content: "Pikachu es mi favorito.",
+  },
+  {
+    userId: 9,
+    role: "ASSISTANT" as const,
+    content:
+      "Entendido. Recordare que Pikachu es tu Pokemon favorito.",
+  },
+
+  // ==========================================
+  // LILLIE
+  // ==========================================
+  {
+    userId: 10,
+    role: "USER" as const,
+    content: "Me gustan los Pokemon legendarios.",
+  },
+  {
+    userId: 10,
+    role: "ASSISTANT" as const,
+    content:
+      "Perfecto. Tendre en cuenta tu interes por los Pokemon legendarios.",
+  },
+  {
+    userId: 10,
+    role: "USER" as const,
+    content: "Mew es uno de mis Pokemon favoritos.",
+  },
+  {
+    userId: 10,
+    role: "ASSISTANT" as const,
+    content:
+      "Lo recordare. Mew es uno de tus Pokemon favoritos.",
+  },
+];
+
+// ==========================================
+// USER MEMORIES
+// ==========================================
+
+const userMemories = [
+  // PROFESSOR OAK
+  {
+    userId: 1,
+    category: "PREFERENCE" as const,
+    content: "Su Pokemon favorito es Bulbasaur.",
+  },
+  {
+    userId: 1,
+    category: "PREFERENCE" as const,
+    content: "Prefiere respuestas cortas.",
+  },
+
+  // ASH KETCHUM
+  {
+    userId: 2,
+    category: "PREFERENCE" as const,
+    content: "Le gustan los Pokemon de tipo Fuego.",
+  },
+  {
+    userId: 2,
+    category: "PREFERENCE" as const,
+    content: "Charizard es uno de sus Pokemon favoritos.",
+  },
+
+  // MISTY
+  {
+    userId: 3,
+    category: "PREFERENCE" as const,
+    content: "Le gustan los Pokemon de tipo Agua.",
+  },
+  {
+    userId: 3,
+    category: "PREFERENCE" as const,
+    content: "Psyduck es uno de sus Pokemon favoritos.",
+  },
+
+  // BROCK
+  {
+    userId: 4,
+    category: "PREFERENCE" as const,
+    content: "Prefiere Pokemon fuertes y resistentes.",
+  },
+
+  // GARY OAK
+  {
+    userId: 5,
+    category: "PREFERENCE" as const,
+    content: "Prefiere recibir recomendaciones de Pokemon que no tenga.",
+  },
+  {
+    userId: 5,
+    category: "PREFERENCE" as const,
+    content: "Mew y Mewtwo son sus Pokemon favoritos.",
+  },
+
+  // MAY
+  {
+    userId: 6,
+    category: "PREFERENCE" as const,
+    content: "Le gustan los Pokemon de Johto.",
+  },
+  {
+    userId: 6,
+    category: "PREFERENCE" as const,
+    content: "Cyndaquil es su Pokemon favorito.",
+  },
+
+  // DAWN
+  {
+    userId: 7,
+    category: "PREFERENCE" as const,
+    content: "Le gustan los Pokemon lindos.",
+  },
+  {
+    userId: 7,
+    category: "PREFERENCE" as const,
+    content: "Togepi es uno de sus Pokemon favoritos.",
+  },
+
+  // SERENA
+  {
+    userId: 8,
+    category: "PREFERENCE" as const,
+    content: "Le gustan Umbreon y Eevee.",
+  },
+  {
+    userId: 8,
+    category: "PREFERENCE" as const,
+    content: "Quiere completar una coleccion de Pokemon de tipo Oscuro.",
+  },
+
+  // CLEMONT
+  {
+    userId: 9,
+    category: "PREFERENCE" as const,
+    content: "Le interesan los Pokemon de tipo Electrico.",
+  },
+  {
+    userId: 9,
+    category: "PREFERENCE" as const,
+    content: "Pikachu es su Pokemon favorito.",
+  },
+
+  // LILLIE
+  {
+    userId: 10,
+    category: "PREFERENCE" as const,
+    content: "Le gustan los Pokemon legendarios.",
+  },
+  {
+    userId: 10,
+    category: "PREFERENCE" as const,
+    content: "Mew es uno de sus Pokemon favoritos.",
+  },
+];
+
 async function main() {
   console.log("Iniciando seed...");
 
@@ -243,6 +663,49 @@ async function main() {
         id: savedUser.id,
       }
     );
+  }
+
+  // ==========================================
+  // CHAT MESSAGES
+  // ==========================================
+  for (const message of chatMessages) {
+    const existingMessages = await prisma.chatMessage.count({
+      where: {
+        userId: message.userId,
+      },
+    });
+
+    if (existingMessages === 0) {
+      await prisma.chatMessage.create({
+        data: {
+          userId: message.userId,
+          role: message.role,
+          content: message.content,
+        },
+      });
+    }
+  }
+
+  // ==========================================
+  // USER MEMORIES
+  // ==========================================
+  for (const memory of userMemories) {
+    const existingMemory = await prisma.userMemory.findFirst({
+      where: {
+        userId: memory.userId,
+        content: memory.content,
+      },
+    });
+
+    if (!existingMemory) {
+      await prisma.userMemory.create({
+        data: {
+          userId: memory.userId,
+          category: memory.category,
+          content: memory.content,
+        },
+      });
+    }
   }
 
   // ==========================================

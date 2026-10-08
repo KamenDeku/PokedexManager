@@ -106,6 +106,21 @@ export async function POST(request: Request) {
       );
     }
 
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        name,
+      },
+    });
+    
+    if (existingUser) {
+      return NextResponse.json(
+        {
+          error: "Ya existe un usuario con ese nombre",
+        },
+        { status: 409 }
+      );
+    }
+
     const hashedPassword = await hashPassword(password);
 
     // ==========================================
@@ -139,6 +154,17 @@ export async function POST(request: Request) {
       "Error en POST /api/user:",
       error
     );
+
+    if (
+      error && typeof error === "object" && "code" in error && error.code === "P2002"
+    ) {
+      return NextResponse.json(
+        {
+          error: "Ya existe un usuario con ese nombre",
+        },
+        { status: 409 }
+      );
+    }
 
     return NextResponse.json(
       {

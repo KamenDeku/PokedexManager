@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import PokemonInfoModal from "./PokemonInfoModal";
 import { getPokemonTypes } from "@/lib/pokeapi";
 import { pokemonTypes } from "@/lib/pokemonTypes";
@@ -21,6 +22,8 @@ type PokemonCardProps = {
 export default function PokemonCard({ pokemon, owned = false,onOwnedChange, }: PokemonCardProps) {
   const [open, setOpen] = useState(false);
   const [types, setTypes] = useState<string[]>([]);
+  const { data: session } = useSession();
+  const isProfessor = session?.user?.role === "PROFESSOR";
 
   useEffect(() => {
     async function loadTypes() {
@@ -52,8 +55,13 @@ export default function PokemonCard({ pokemon, owned = false,onOwnedChange, }: P
     >
 
       {owned && (
-        <img className={styles.ownedBadge}
-          src="/svg/pokeball.svg"
+        <img
+          className={styles.ownedBadge}
+          src={
+            isProfessor
+              ? "/svg/ultraball.svg"
+              : "/svg/pokeball.svg"
+          }
           alt="Mi PC"
         />
       )}

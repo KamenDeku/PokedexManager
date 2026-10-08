@@ -285,8 +285,11 @@ export default function Navbar({search, setSearch, types, setTypes, forms, setFo
               aria-expanded={userMenuOpen}
             >
               <img
-                src={
-                  isLoggedIn ? "/svg/pokeball.svg" : "/svg/pokeball-shadow.svg"
+                src={ !isLoggedIn
+                  ? "/svg/pokeball-shadow.svg"
+                  : isProfessor
+                      ? "/svg/ultraball.svg"
+                      : "/svg/pokeball.svg"
                 }
                 alt={
                   isLoggedIn ? "Usuario" : "Iniciar sesion"
