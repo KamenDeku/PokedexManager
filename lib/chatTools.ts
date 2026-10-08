@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getPokemon, getPokemonByType, getPokemonTypes } from "@/lib/pokeapi";
 import { pokemonTypes } from "@/lib/pokemonTypes";
+import { saveUserMemory, deleteUserMemory } from "@/lib/memory";
 
 // ==========================================
 // TOOL DEFINITIONS
@@ -53,6 +54,48 @@ export const chatTools = [
           },
         },
         required: ["type"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "save_memory",
+      description:
+        "Guarda un dato duradero sobre el usuario para recordarlo en futuras conversaciones. Usa category PREFERENCE para gustos y preferencias (tipo o Pokemon favorito, estilo de respuesta preferido) y FACT para datos o metas (quiere completar Kanto, juega en tal version). Escribe un hecho corto en tercera persona. No guardes datos sensibles, contrasenas ni informacion que ya esta en su coleccion.",
+      parameters: {
+        type: "object",
+        properties: {
+          memory: {
+            type: "string",
+            description:
+              "Hecho corto y claro, por ejemplo: 'Su tipo favorito es fuego' o 'Quiere completar la Pokedex de Kanto'",
+          },
+          category: {
+            type: "string",
+            enum: ["PREFERENCE", "FACT"],
+            description: "PREFERENCE para gustos y preferencias, FACT para datos y metas",
+          },
+        },
+        required: ["memory", "category"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "forget_memory",
+      description:
+        "Borra un recuerdo del usuario por su id. Usala cuando el usuario pida olvidar algo o cuando un recuerdo ya no sea cierto.",
+      parameters: {
+        type: "object",
+        properties: {
+          id: {
+            type: "number",
+            description: "ID del recuerdo (aparece en la lista de recuerdos del prompt)",
+          },
+        },
+        required: ["id"],
       },
     },
   },
@@ -175,6 +218,28 @@ export async function executeChatTool(
         totalAvailable: available.length,
         pokemon: available.slice(0, limit),
       };
+    }
+
+    // ==========================================
+    // SAVE MEMORY
+    // ==========================================
+    if (name === "save_memory") {
+      const category = args.category === "PREFERENCE" ? "PREFERENCE" : "FACT";
+
+      return await saveUserMemory(userId, String(args.memory ?? ""), category);
+    }
+
+    // ==========================================
+    // FORGET MEMORY
+    // ==========================================
+    if (name === "forget_memory") {
+      const id = Number(args.id);
+
+      if (!Number.isInteger(id) || id <= 0) {
+        return { error: "id invalido" };
+      }
+
+      return await deleteUserMemory(userId, id);
     }
 
     return { error: `Herramienta desconocida: ${name}` };

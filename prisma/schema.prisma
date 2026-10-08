@@ -18,6 +18,16 @@ enum TrainerStatus {
   TRAINER
 }
 
+enum ChatRole {
+  USER
+  ASSISTANT
+}
+
+enum MemoryCategory {
+  PREFERENCE
+  FACT
+}
+
 // ==========================================
 // USER
 // ==========================================
@@ -30,6 +40,8 @@ model User {
   createdAt DateTime      @default(now())
 
   collection Collection[]
+  chatMessages ChatMessage[]
+  memories     UserMemory[]
 }
 
 // ==========================================
@@ -60,4 +72,32 @@ model Collection {
   pokemon Pokemon @relation(fields: [pokemonId], references: [id])
 
   @@unique([userId, pokemonId])
+}
+
+// ==========================================
+// BOT
+// ==========================================
+
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  role      ChatRole
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, id])
+}
+
+model UserMemory {
+  id        Int            @id @default(autoincrement())
+  userId    Int
+  category  MemoryCategory @default(FACT)
+  content   String         @db.VarChar(300)
+  createdAt DateTime       @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

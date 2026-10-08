@@ -1,19 +1,15 @@
 .navbar {
   position: fixed;
 
-  top: 0;
-  
-  left: 0;
-
-  right: 0;
+  inset: 0 0 auto;
 
   z-index: 1000;
-
-  height: 76px;
 
   display: flex;
 
   align-items: center;
+
+  height: 76px;
 
   padding: 0 24px;
 
@@ -22,12 +18,19 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-.navbarLeft {
-  flex: 1;
-
+.navbarLeft,
+.navbarRight,
+.searchContainer,
+.searchIcon,
+.menuButton,
+.loginButton {
   display: flex;
 
   align-items: center;
+}
+
+.navbarLeft {
+  flex: 1;
 
   min-width: 0;
 }
@@ -45,9 +48,9 @@
 }
 
 .navbarCenter {
-  flex: 2;
-
   display: flex;
+
+  flex: 2;
 
   justify-content: center;
 
@@ -59,10 +62,6 @@
 
   max-width: 650px;
 
-  display: flex;
-
-  align-items: center;
-
   background: var(--white);
 
   border-radius: 999px;
@@ -73,21 +72,17 @@
 }
 
 .searchIcon {
-  display: flex;
-
-  align-items: center;
+  flex-shrink: 0;
 
   margin-right: 10px;
-
-  flex-shrink: 0;
 }
 
 .searchIcon img {
+  display: block;
+
   width: 20px;
 
   height: 20px;
-
-  display: block;
 }
 
 .searchContainer input {
@@ -95,13 +90,12 @@
 
   min-width: 0;
 
+  padding: 12px 0;
   border: none;
 
   outline: none;
 
   background: transparent;
-
-  padding: 12px 0;
 
   font-size: 15px;
 }
@@ -112,12 +106,19 @@
   flex-shrink: 0;
 }
 
+.menuButton,
+.loginButton {
+  justify-content: center;
+
+  cursor: pointer;
+}
+
 .menuButton {
+  flex-shrink: 0;
+
   width: 38px;
 
   height: 38px;
-
-  flex-shrink: 0;
 
   margin-left: 8px;
 
@@ -128,18 +129,8 @@
   border-radius: 50%;
 
   background: transparent;
-
-  cursor: pointer;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease;
+  
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .menuButton:hover {
@@ -148,49 +139,63 @@
   transform: scale(1.05);
 }
 
-.menuButton img {
+.menuButton img,
+.loginButton img {
   width: 100%;
 
   height: 100%;
 
-  display: block;
-
   object-fit: contain;
 }
 
-.typeMenu {
+.menuButton img {
+  display: block;
+}
+
+.typeMenu,
+.userMenu {
   position: absolute;
 
   top: calc(100% + 12px);
 
   right: 0;
 
-  width: 200px;
-
-  max-height: 60vh;
-
-  overflow-y: auto;
-
   display: flex;
 
   flex-direction: column;
 
+  width: 200px;
+
   padding: 6px;
 
-  background: var(--white);
-
   border-radius: 12px;
+
+  background: var(--white);
 
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 
   z-index: 1100;
 }
 
+.typeMenu {
+  max-height: 60vh;
+
+  overflow-y: auto;
+}
+
 .typeButton {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
   padding: 10px 14px;
 
   border: none;
-  
+
+  border-bottom: 1px solid var(--metal-gray);
+
   border-radius: 8px;
 
   background: transparent;
@@ -200,14 +205,6 @@
   text-transform: capitalize;
 
   cursor: pointer;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 10px;
-
-  border-bottom: 1px solid var(--metal-gray);
 }
 
 .typeButton:hover {
@@ -229,23 +226,23 @@
 .menuTitle {
   padding: 10px 14px 4px;
 
+  color: rgba(0, 0, 0, 0.55);
+
   font-size: 12px;
 
   font-weight: 700;
 
   text-transform: uppercase;
-
-  color: rgba(0, 0, 0, 0.55);
 }
 
 .sectionButton {
   justify-content: space-between;
 
+  font-size: 13px;
+
   font-weight: 700;
 
   text-transform: uppercase;
-
-  font-size: 13px;
 }
 
 .sectionCount {
@@ -281,11 +278,7 @@
 .navbarRight {
   flex: 1;
 
-  display: flex;
-
   justify-content: flex-end;
-
-  align-items: center;
 }
 
 .loginButton {
@@ -301,17 +294,7 @@
 
   background: var(--white);
 
-  cursor: pointer;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .loginButton:hover {
@@ -320,50 +303,18 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
-.loginButton img {
-  width: 100%;
-
-  height: 100%;
-
-  object-fit: contain;
-}
-
 .userWrapper {
   position: relative;
 }
 
-.userMenu {
-  position: absolute;
-
-  top: calc(100% + 12px);
-
-  right: 0;
-
-  width: 200px;
-
-  display: flex;
-
-  flex-direction: column;
-
-  padding: 6px;
-
-  background: var(--white);
-
-  border-radius: 12px;
-
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-
-  z-index: 1100;
-}
-
 .userName {
-  padding: 8px 14px;
+  margin-bottom: 4px;
 
-  font-weight: 700;
+  padding: 8px 14px;
 
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
-  margin-bottom: 4px;
+  font-weight: 700;
 }
 
 .signOutButton {
@@ -383,7 +334,6 @@
 }
 
 @media (max-width: 768px) {
-
   .navbar {
     height: auto;
 
@@ -392,10 +342,6 @@
     padding: 12px 16px;
 
     flex-wrap: wrap;
-  }
-
-  .navbarLeft {
-    flex: 1;
   }
 
   .navbarCenter {
@@ -416,7 +362,6 @@
 }
 
 @media (max-width: 480px) {
-
   .navbar {
     padding: 10px 12px;
   }
@@ -427,7 +372,7 @@
 
   .loginButton {
     width: 42px;
-
+    
     height: 42px;
   }
 

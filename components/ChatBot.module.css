@@ -52,6 +52,10 @@
   object-fit: cover;
 }
 
+/* ==========================================
+   CHAT WINDOW
+   ========================================== */
+
 .chatWindow {
   position: fixed;
 
@@ -71,7 +75,9 @@
 
   flex-direction: column;
 
-  background: var(--white);
+  background: #20d9e8;
+
+  border: 2px solid #0b9fb1;
 
   border-radius: 16px;
 
@@ -79,6 +85,10 @@
 
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
+
+/* ==========================================
+   HEADER
+   ========================================== */
 
 .chatHeader {
   display: flex;
@@ -89,9 +99,11 @@
 
   padding: 12px 16px;
 
-  background: var(--pokemon-red);
+  background: #f28c28;
 
-  color: var(--white);
+  color: #ffffff;
+
+  border-bottom: 2px solid #d96f0b;
 }
 
 .chatTitle {
@@ -109,20 +121,28 @@
 
   border-radius: 50%;
 
-  background: transparent;
+  background: rgba(255, 255, 255, 0.15);
 
-  color: var(--white);
+  color: #ffffff;
 
   font-size: 16px;
 
   cursor: pointer;
 
-  transition: background 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .closeButton:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.3);
+
+  transform: scale(1.08);
 }
+
+/* ==========================================
+   MESSAGES
+   ========================================== */
 
 .chatMessages {
   flex: 1;
@@ -136,6 +156,8 @@
   padding: 12px;
 
   overflow-y: auto;
+
+  background: #20d9e8;
 }
 
 .message {
@@ -150,24 +172,38 @@
   line-height: 1.4;
 
   word-break: break-word;
+
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
 }
+
+/* ==========================================
+   USER MESSAGE
+   ========================================== */
 
 .userMessage {
   align-self: flex-end;
 
-  background: var(--pokemon-red);
+  background: #075985;
 
-  color: var(--white);
+  color: #ffffff;
 
   white-space: pre-wrap;
+
+  border-bottom-right-radius: 4px;
 }
+
+/* ==========================================
+   BOT MESSAGE
+   ========================================== */
 
 .botMessage {
   align-self: flex-start;
 
-  background: #eeeeee;
+  background: #ffd39a;
 
-  color: #222222;
+  color: #3d260f;
+
+  border-bottom-left-radius: 4px;
 }
 
 .botMessage p {
@@ -202,6 +238,8 @@
 
 .botMessage strong {
   font-weight: 700;
+
+  color: #a54d00;
 }
 
 .botMessage hr {
@@ -209,7 +247,7 @@
 
   border: none;
 
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  border-top: 1px solid rgba(61, 38, 15, 0.2);
 }
 
 .botMessage table {
@@ -226,10 +264,14 @@
 .botMessage td {
   padding: 4px 6px;
 
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(61, 38, 15, 0.2);
 
   text-align: left;
 }
+
+/* ==========================================
+   INPUT
+   ========================================== */
 
 .chatInputRow {
   display: flex;
@@ -240,7 +282,9 @@
 
   padding: 10px;
 
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  background: #bff8fc;
+
+  border-top: 2px solid #0b9fb1;
 }
 
 .chatInputRow input {
@@ -250,22 +294,32 @@
 
   padding: 10px 14px;
 
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 2px solid #72dce5;
 
   border-radius: 999px;
 
   outline: none;
 
-  background: var(--white);
+  background: #ffffff;
 
   color: #222222;
 
   font-size: 14px;
+
+  transition: border-color 0.2s ease;
+}
+
+.chatInputRow input::placeholder {
+  color: #6b7280;
 }
 
 .chatInputRow input:focus {
-  border-color: var(--pokemon-red);
+  border-color: #f28c28;
 }
+
+/* ==========================================
+   SEND BUTTON
+   ========================================== */
 
 .sendButton {
   padding: 10px 16px;
@@ -274,20 +328,25 @@
 
   border-radius: 999px;
 
-  background: var(--pokemon-red);
+  background: #f28c28;
 
-  color: var(--white);
+  color: #ffffff;
 
   font-size: 14px;
+
+  font-weight: 600;
 
   cursor: pointer;
 
   transition:
     transform 0.2s ease,
+    background 0.2s ease,
     opacity 0.2s ease;
 }
 
 .sendButton:hover {
+  background: #e97912;
+
   transform: scale(1.05);
 }
 
@@ -299,8 +358,33 @@
   transform: none;
 }
 
-@media (max-width: 480px) {
+/* ==========================================
+   SCROLLBAR
+   ========================================== */
 
+.chatMessages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chatMessages::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.chatMessages::-webkit-scrollbar-thumb {
+  background: #0b9fb1;
+
+  border-radius: 999px;
+}
+
+.chatMessages::-webkit-scrollbar-thumb:hover {
+  background: #087f8e;
+}
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+@media (max-width: 480px) {
   .chatButton {
     right: 16px;
 

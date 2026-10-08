@@ -1,86 +1,111 @@
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/authorization";
 import { chatWithAI, ChatMessage } from "@/lib/ai";
+import { prisma } from "@/lib/prisma";
 
-const MAX_MESSAGES = 20;
+const CONTEXT_MESSAGES = 20;
+const HISTORY_LIMIT = 50;
 const MAX_CONTENT_LENGTH = 1000;
+
+function toRole(role: "USER" | "ASSISTANT"): "user" | "assistant" {
+  return role === "USER" ? "user" : "assistant";
+}
+
+// ==========================================
+// GET HISTORY
+// ==========================================
+export async function GET() {
+  const { session, status } = await requireAuth();
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status });
+  }
+
+  const rows = await prisma.chatMessage.findMany({
+    where: { userId: Number(session.user.id) },
+    orderBy: { id: "desc" },
+    take: HISTORY_LIMIT,
+  });
+
+  const messages = rows.reverse().map((m) => ({
+    role: toRole(m.role),
+    content: m.content,
+  }));
+
+  return NextResponse.json({ messages });
+}
 
 // ==========================================
 // POST CHAT
 // ==========================================
 export async function POST(request: Request) {
   try {
-    const authResult = await requireAuth();
+    const { session, status } = await requireAuth();
 
-    if (!authResult.session) {
-      return NextResponse.json(
-        {
-          error: "No autenticado",
-        },
-        {
-          status: authResult.status,
-        }
-      );
+    if (!session) {
+      return NextResponse.json({ error: "No autenticado" }, { status });
     }
 
-    const userId = Number(authResult.session.user.id);
+    const userId = Number(session.user.id);
     const body = await request.json();
-    const { messages } = body;
+    const text = typeof body?.message === "string" ? body.message.trim().slice(0, MAX_CONTENT_LENGTH) : "";
 
-    // ==========================================
-    // VALIDATION
-    // ==========================================
-    if (!Array.isArray(messages) || messages.length === 0) {
-      return NextResponse.json(
-        {
-          error: "messages es requerido",
-        }, { status: 400 }
-      );
+    if (!text) {
+      return NextResponse.json({ error: "message es requerido" }, { status: 400 });
     }
 
-    const validMessages: ChatMessage[] = messages.slice(-MAX_MESSAGES).filter(
-        (m) =>
-          (m?.role === "user" || m?.role === "assistant") && typeof m?.content === "string" && m.content.trim().length > 0
-      )
-      .map((m) => ({
-        role: m.role,
-        content: m.content.trim().slice(0, MAX_CONTENT_LENGTH),
-      }));
+    const previous = await prisma.chatMessage.findMany({
+      where: { userId },
+      orderBy: { id: "desc" },
+      take: CONTEXT_MESSAGES - 1,
+    });
 
-    if (validMessages.length === 0 || validMessages[validMessages.length - 1].role !== "user") {
-      return NextResponse.json(
-        {
-          error: "El ultimo mensaje debe ser del usuario",
-        }, { status: 400 }
-      );
+    const history: ChatMessage[] = previous.reverse().map((m) => ({
+      role: toRole(m.role),
+      content: m.content,
+    }));
+
+    while (history.length > 0 && history[0].role !== "user") {
+      history.shift();
     }
 
-    // ==========================================
-    // AI RESPONSE
-    // ==========================================
-    const reply = await chatWithAI(validMessages, userId);
+    const reply = await chatWithAI([...history, { role: "user", content: text }], userId);
 
-    return NextResponse.json(
-      { reply },
-      { status: 200 }
-    );
+    await prisma.chatMessage.createMany({
+      data: [
+        { userId, role: "USER", content: text },
+        { userId, role: "ASSISTANT", content: reply },
+      ],
+    });
 
+    return NextResponse.json({ reply }, { status: 200 });
   } catch (error) {
-
     if (error instanceof Error && error.message === "RATE_LIMIT") {
       return NextResponse.json(
-        {
-          error: "El asistente esta muy ocupado, intenta de nuevo en unos segundos",
-        }, { status: 429 }
+        { error: "El asistente esta muy ocupado, intenta de nuevo en unos segundos" },
+        { status: 429 }
       );
     }
 
     console.error("Error en POST /api/chat:", error);
 
-    return NextResponse.json(
-      {
-        error: "Error interno del servidor",
-      }, { status: 500 }
-    );
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
+}
+
+// ==========================================
+// DELETE HISTORY
+// ==========================================
+export async function DELETE() {
+  const { session, status } = await requireAuth();
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status });
+  }
+
+  await prisma.chatMessage.deleteMany({
+    where: { userId: Number(session.user.id) },
+  });
+
+  return NextResponse.json({ ok: true });
 }

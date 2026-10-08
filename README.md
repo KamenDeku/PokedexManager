@@ -115,28 +115,30 @@ Para iniciar sesión, haz clic en el logo de la Pokébola ubicado en la esquina 
 
 ## Chat de IA: Implementacion y Arquitectura
 El proyecto incluye un Chat de Inteligencia Artificial (compatible con modelos como Claude o Gemini) para ayudarte a gestionar tu PokeDex. En lugar de inyectar toda la colección del usuario en el prompt, la IA utiliza function calling (tool use). El modelo decide de forma autónoma qué información necesita y el backend ejecuta las consultas interactuando con Prisma y la PokeAPI.
-Capacidades del Asistente (Lo que puede hacer)
 
-### Con tu coleccion (get_my_collection):
+### Capacidades del Asistente (Lo que puede hacer)
+
+#### Con tu coleccion (get_my_collection):
 - Informarte de cuántos y cuáles Pokémon posees.
 - Contabilizar la distribución de tipos para detectar debilidades en tu equipo.
 - Analizar tus capturas ("¿qué tipos me faltan?", "¿tengo algo bueno contra el tipo Roca?").
 
-### Con la informacion de un Pokemon (get_pokemon_info):
+#### Con la informacion de un Pokemon (get_pokemon_info):
 - Proporcionar tipos, habilidades (marcando claramente cuáles son ocultas), altura y peso.
 - Indicar la cantidad total de movimientos que puede aprender y mostrar 10 ejemplos.
 - Permite búsquedas flexibles utilizando el nombre en inglés o el número de la Pokédex.
 
-### Con recomendaciones (get_pokemon_by_type):
+#### Con recomendaciones (get_pokemon_by_type):
 - Listar hasta 30 Pokémon de un tipo en específico que aún no formen parte de tu colección.
 - Cruzar estos datos con tu equipo actual para sugerir qué capturas priorizar y explicar el motivo estratégico.
 
-### Interaccion conversacional:
+#### Interaccion conversacional:
 - Mantiene el contexto de los últimos 20 mensajes (puedes preguntar "¿y ese cuánto pesa?" y entenderá a qué Pokémon te refieres).
 - Formatea sus respuestas usando Markdown para mejor legibilidad.
 - Maneja el límite de peticiones de la API (rate limit) de forma controlada y con mensajes amigables.
 
-## Limitaciones y Consideraciones Tecnicas (Lo que NO puede hacer)
-### Restricciones de acciones y privacidad:
+### Limitaciones y Consideraciones Tecnicas (Lo que NO puede hacer)
+
+#### Restricciones de acciones y privacidad:
 - Solo lectura: No tiene capacidad para agregar, eliminar ni liberar Pokémon.
 - Filtrado de estado: Ignora los Pokémon con estado RELEASED, contabilizando únicamente los CAUGHT.

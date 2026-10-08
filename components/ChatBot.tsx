@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
@@ -23,21 +24,83 @@ export default function ChatBot() {
   const [messages, setMessages] = useState<ChatMessage[]>([welcomeMessage]);
 
   const bottomRef = useRef<HTMLDivElement>(null);
+  const chatWindowRef = useRef<HTMLDivElement>(null);
+  const chatButtonRef = useRef<HTMLButtonElement>(null);
 
   const { status } = useSession();
 
+  // ==========================================
+  // CERRAR CHAT AL HACER CLICK AFUERA
+  // ==========================================
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (!open) {
+        return;
+      }
+
+      const target = event.target as Node;
+
+      if (
+        chatWindowRef.current &&
+        !chatWindowRef.current.contains(target) &&
+        chatButtonRef.current &&
+        !chatButtonRef.current.contains(target)
+      ) {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
+
+  // ==========================================
+  // CARGAR HISTORIAL
+  // ==========================================
   useEffect(() => {
     if (status === "unauthenticated") {
       setOpen(false);
       setInput("");
       setMessages([welcomeMessage]);
+      return;
     }
+
+    if (status !== "authenticated") {
+      return;
+    }
+
+    async function loadHistory() {
+      try {
+        const response = await fetch("/api/chat");
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data: { messages: ChatMessage[] } = await response.json();
+
+        setMessages([welcomeMessage, ...data.messages]);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    loadHistory();
   }, [status]);
 
+  // ==========================================
+  // SCROLL AUTOMATICO
+  // ==========================================
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading, open]);
 
+  // ==========================================
+  // ENVIAR MENSAJE
+  // ==========================================
   async function sendMessage() {
     const text = input.trim();
 
@@ -45,7 +108,13 @@ export default function ChatBot() {
       return;
     }
 
-    const newMessages: ChatMessage[] = [...messages, { role: "user", content: text }];
+    const newMessages: ChatMessage[] = [
+      ...messages,
+      {
+        role: "user",
+        content: text,
+      },
+    ];
 
     setMessages(newMessages);
     setInput("");
@@ -54,8 +123,14 @@ export default function ChatBot() {
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages.slice(1) }),
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          message: text,
+        }),
       });
 
       const data = await response.json();
@@ -64,13 +139,18 @@ export default function ChatBot() {
         ...newMessages,
         {
           role: "assistant",
-          content: response.ok ? data.reply : data.error ?? "Ocurrio un error",
+          content: response.ok
+            ? data.reply
+            : data.error ?? "Ocurrio un error",
         },
       ]);
     } catch {
       setMessages([
         ...newMessages,
-        { role: "assistant", content: "No se pudo conectar con el asistente" },
+        {
+          role: "assistant",
+          content: "No se pudo conectar con el asistente",
+        },
       ]);
     } finally {
       setLoading(false);
@@ -84,28 +164,33 @@ export default function ChatBot() {
   return (
     <>
       {open && (
-        <div className={styles.chatWindow}>
-
+        <div
+          ref={chatWindowRef}
+          className={styles.chatWindow}
+        >
           <div className={styles.chatHeader}>
-
             <span className={styles.chatTitle}>
               Rotom
             </span>
 
-            <button className={styles.closeButton}
+            <button
+              className={styles.closeButton}
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Cerrar chat"
             >
               ✕
             </button>
-
           </div>
 
           <div className={styles.chatMessages}>
-
             {messages.map((message, index) => (
-              <div className={`${styles.message} ${message.role === "user" ? styles.userMessage : styles.botMessage}`}
+              <div
+                className={`${styles.message} ${
+                  message.role === "user"
+                    ? styles.userMessage
+                    : styles.botMessage
+                }`}
                 key={index}
               >
                 {message.role === "assistant" ? (
@@ -119,40 +204,43 @@ export default function ChatBot() {
             ))}
 
             {loading && (
-              <div className={`${styles.message} ${styles.botMessage}`}>
+              <div
+                className={`${styles.message} ${styles.botMessage}`}
+              >
                 Pensando...
               </div>
             )}
 
             <div ref={bottomRef} />
-
           </div>
 
           <div className={styles.chatInputRow}>
-
             <input
               type="text"
               placeholder="Pregunta algo..."
               value={input}
               maxLength={1000}
               onChange={(event) => setInput(event.target.value)}
-              onKeyDown={(event) => event.key === "Enter" && sendMessage()}
+              onKeyDown={(event) =>
+                event.key === "Enter" && sendMessage()
+              }
             />
 
-            <button className={styles.sendButton}
+            <button
+              className={styles.sendButton}
               type="button"
               onClick={sendMessage}
               disabled={loading}
             >
               Enviar
             </button>
-
           </div>
-
         </div>
       )}
 
-      <button className={styles.chatButton}
+      <button
+        ref={chatButtonRef}
+        className={styles.chatButton}
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-label={open ? "Cerrar asistente" : "Abrir asistente"}
