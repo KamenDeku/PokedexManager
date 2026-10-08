@@ -29,9 +29,6 @@ export default function ChatBot() {
 
   const { status } = useSession();
 
-  // ==========================================
-  // CERRAR CHAT AL HACER CLICK AFUERA
-  // ==========================================
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (!open) {
@@ -57,9 +54,6 @@ export default function ChatBot() {
     };
   }, [open]);
 
-  // ==========================================
-  // CARGAR HISTORIAL
-  // ==========================================
   useEffect(() => {
     if (status === "unauthenticated") {
       setOpen(false);
@@ -91,16 +85,10 @@ export default function ChatBot() {
     loadHistory();
   }, [status]);
 
-  // ==========================================
-  // SCROLL AUTOMATICO
-  // ==========================================
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading, open]);
 
-  // ==========================================
-  // ENVIAR MENSAJE
-  // ==========================================
   async function sendMessage() {
     const text = input.trim();
 

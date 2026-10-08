@@ -2,9 +2,6 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, requireProfessor, } from "@/lib/authorization";
 
-// ==========================================
-// PATCH COLLECTION
-// ==========================================
 export async function PATCH(request: Request, context: {params: Promise<{ id: string }>;}) {
 
   try {
@@ -70,9 +67,6 @@ export async function PATCH(request: Request, context: {params: Promise<{ id: st
       );
     }
 
-    // ==========================================
-    // UPDATE COLLECTION
-    // ==========================================
     const collection = await prisma.collection.update({
         where: {
           id: collectionId,
@@ -104,9 +98,6 @@ export async function PATCH(request: Request, context: {params: Promise<{ id: st
   }
 }
 
-// ==========================================
-// DELETE COLLECTION
-// ==========================================
 export async function DELETE(request: Request, context: {params: Promise<{ id: string }>;}) {
 
   try {
@@ -153,9 +144,6 @@ export async function DELETE(request: Request, context: {params: Promise<{ id: s
       );
     }
 
-    // ==========================================
-    // DELETE COLLECTION
-    // ==========================================
     await prisma.$transaction(
       async (transaction) => {
 
@@ -172,9 +160,6 @@ export async function DELETE(request: Request, context: {params: Promise<{ id: s
             },
           });
 
-        // ==========================================
-        // DELETE POKEMON IF UNUSED
-        // ==========================================
         if (!remainingCollection) {
           await transaction.pokemon.delete({
             where: {

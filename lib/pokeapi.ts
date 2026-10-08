@@ -1,8 +1,5 @@
 const POKE_API_URL = process.env.POKE_API_URL || "https://pokeapi.co/api/v2";
 
-// ------------------------------------------
-// INFO
-// ------------------------------------------
 export interface PokemonListItem {
   id: number;
   name: string;
@@ -74,9 +71,6 @@ export interface PokemonTypeListItem {
   name: string;
 }
 
-// ==========================================
-// GET ALL - POKEAPI
-// ==========================================
 export async function getPokemonList(limit: number, offset: number): Promise<PokemonListResponse> {
 
   const response = await fetch(`${POKE_API_URL}/pokemon?limit=${limit}&offset=${offset}`,
@@ -116,9 +110,6 @@ export async function getPokemonList(limit: number, offset: number): Promise<Pok
   };
 }
 
-// ==========================================
-// GET ONE - POKEAPI
-// ==========================================
 export async function getPokemon(pokemon: string): Promise<PokemonDetails> {
 
   const pokemonName = pokemon.trim().toLowerCase();
@@ -179,9 +170,6 @@ export async function getPokemon(pokemon: string): Promise<PokemonDetails> {
   };
 }
 
-// ==========================================
-// GET BY TYPE - POKEAPI
-// ==========================================
 export async function getPokemonByType(
   type: string
 ): Promise<PokemonListItem[]> {
@@ -230,9 +218,6 @@ export async function getPokemonByType(
   );
 }
 
-// ==========================================
-// GET BY TYPES - POKEAPI
-// ==========================================
 export async function getPokemonByTypes(
   types: string[]
 ): Promise<PokemonListItem[]> {
@@ -255,9 +240,6 @@ export async function getPokemonByTypes(
   );
 }
 
-// ==========================================
-// GET TYPES - POKEAPI
-// ==========================================
 const typesCache = new Map<number, string[]>();
 
 export async function getPokemonTypes(id: number): Promise<string[]> {

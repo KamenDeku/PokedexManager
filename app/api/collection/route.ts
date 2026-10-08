@@ -2,9 +2,6 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/authorization";
 
-// ==========================================
-// POST COLLECTION
-// ==========================================
 export async function POST(request: Request) {
   try {
 
@@ -68,9 +65,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // ==========================================
-    // CREATE / UPDATE COLLECTION
-    // ==========================================
     const collection = await prisma.collection.upsert({
         where: {
           userId_pokemonId: {
@@ -111,9 +105,6 @@ export async function POST(request: Request) {
   }
 }
 
-// ==========================================
-// GET COLLECTIONS
-// ==========================================
 export async function GET(request: Request) {
   try {
     const authResult = await requireAuth();

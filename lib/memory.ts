@@ -11,9 +11,6 @@ export interface UserMemoryItem {
   content: string;
 }
 
-// ==========================================
-// GET MEMORIES
-// ==========================================
 export async function getUserMemories(userId: number): Promise<UserMemoryItem[]> {
   return prisma.userMemory.findMany({
     where: { userId },
@@ -26,9 +23,6 @@ export async function getUserMemories(userId: number): Promise<UserMemoryItem[]>
   });
 }
 
-// ==========================================
-// SAVE MEMORY
-// ==========================================
 export async function saveUserMemory(userId: number, content: string, category: MemoryCategoryValue = "FACT") {
   const text = content.trim().slice(0, MAX_MEMORY_LENGTH);
 
@@ -60,9 +54,6 @@ export async function saveUserMemory(userId: number, content: string, category: 
   return { saved: true, memory: created };
 }
 
-// ==========================================
-// DELETE MEMORY
-// ==========================================
 export async function deleteUserMemory(userId: number, id: number) {
   const result = await prisma.userMemory.deleteMany({
     where: { id, userId },
@@ -71,9 +62,6 @@ export async function deleteUserMemory(userId: number, id: number) {
   return { deleted: result.count > 0 };
 }
 
-// ==========================================
-// CLEAR ALL MEMORIES
-// ==========================================
 export async function clearUserMemories(userId: number) {
   await prisma.userMemory.deleteMany({
     where: { userId },

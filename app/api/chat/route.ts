@@ -11,9 +11,6 @@ function toRole(role: "USER" | "ASSISTANT"): "user" | "assistant" {
   return role === "USER" ? "user" : "assistant";
 }
 
-// ==========================================
-// GET HISTORY
-// ==========================================
 export async function GET() {
   const { session, status } = await requireAuth();
 
@@ -35,9 +32,6 @@ export async function GET() {
   return NextResponse.json({ messages });
 }
 
-// ==========================================
-// POST CHAT
-// ==========================================
 export async function POST(request: Request) {
   try {
     const { session, status } = await requireAuth();
@@ -93,9 +87,6 @@ export async function POST(request: Request) {
   }
 }
 
-// ==========================================
-// DELETE HISTORY
-// ==========================================
 export async function DELETE() {
   const { session, status } = await requireAuth();
 

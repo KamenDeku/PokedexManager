@@ -3,9 +3,6 @@ import { getPokemon, getPokemonByType, getPokemonTypes } from "@/lib/pokeapi";
 import { pokemonTypes } from "@/lib/pokemonTypes";
 import { saveUserMemory, deleteUserMemory } from "@/lib/memory";
 
-// ==========================================
-// TOOL DEFINITIONS
-// ==========================================
 export const chatTools = [
   {
     type: "function",
@@ -101,9 +98,6 @@ export const chatTools = [
   },
 ];
 
-// ==========================================
-// COLLECTION WITH TYPES
-// ==========================================
 async function getUserCollectionWithTypes(userId: number) {
   const collection = await prisma.collection.findMany({
     where: {
@@ -131,18 +125,12 @@ async function getUserCollectionWithTypes(userId: number) {
   );
 }
 
-// ==========================================
-// EXECUTE TOOL
-// ==========================================
 export async function executeChatTool(
   name: string,
   args: Record<string, unknown>,
   userId: number
 ): Promise<unknown> {
   try {
-    // ==========================================
-    // GET MY COLLECTION
-    // ==========================================
     if (name === "get_my_collection") {
       const pokemon = await getUserCollectionWithTypes(userId);
       const typeCount: Record<string, number> = {};
@@ -160,9 +148,6 @@ export async function executeChatTool(
       };
     }
 
-    // ==========================================
-    // GET POKEMON INFO
-    // ==========================================
     if (name === "get_pokemon_info") {
       const data = await getPokemon(String(args.pokemon ?? ""));
 
@@ -182,9 +167,6 @@ export async function executeChatTool(
       };
     }
 
-    // ==========================================
-    // GET POKEMON BY TYPE (NOT OWNED)
-    // ==========================================
     if (name === "get_pokemon_by_type") {
       const type = String(args.type ?? "");
       const limit = Math.min(Math.max(Number(args.limit) || 15, 1), 30);
@@ -220,18 +202,12 @@ export async function executeChatTool(
       };
     }
 
-    // ==========================================
-    // SAVE MEMORY
-    // ==========================================
     if (name === "save_memory") {
       const category = args.category === "PREFERENCE" ? "PREFERENCE" : "FACT";
 
       return await saveUserMemory(userId, String(args.memory ?? ""), category);
     }
 
-    // ==========================================
-    // FORGET MEMORY
-    // ==========================================
     if (name === "forget_memory") {
       const id = Number(args.id);
 

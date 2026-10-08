@@ -3,9 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/password";
 import { requireProfessor } from "@/lib/authorization";
 
-// ==========================================
-// GET ALL USERS
-// ==========================================
 export async function GET() {
 
   try {
@@ -27,9 +24,6 @@ export async function GET() {
       );
     }
 
-    // ==========================================
-    // USERS
-    // ==========================================
     const users =
       await prisma.user.findMany({
         select: {
@@ -61,9 +55,6 @@ export async function GET() {
   }
 }
 
-// ==========================================
-// POST USER
-// ==========================================
 export async function POST(request: Request) {
 
   try {
@@ -123,9 +114,6 @@ export async function POST(request: Request) {
 
     const hashedPassword = await hashPassword(password);
 
-    // ==========================================
-    // CREATE USER
-    // ==========================================
     const user =
       await prisma.user.create({
         data: {

@@ -141,12 +141,12 @@ export default function PokemonCollection({userId, search, types, forms, page, s
   return (
     <>
       <h2 className={styles.collectionTitle}>
-        {userId ? `Coleccion del usuario #${userId}` : "Mi coleccion"}
+        {userId ? `PC del usuario #${userId}` : "PC"}
       </h2>
 
       {filteredPokemon.length === 0 ? (
         <div className={styles.collectionMessage}>
-          No hay Pokemon en la coleccion.
+          No hay Pokemones en la coleccion.
         </div>
       ) : (
         <>

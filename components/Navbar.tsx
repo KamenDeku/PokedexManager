@@ -235,7 +235,7 @@ export default function Navbar({search, setSearch, types, setTypes, forms, setFo
                         onClick={handleToggleForms}
                         aria-expanded={formsOpen}
                       >
-                        Formas especiales
+                        Formas
 
                         <span className={styles.sectionCount}>
                           {forms.length > 0 ? `(${forms.length})` : ""}

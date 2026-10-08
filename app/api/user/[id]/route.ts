@@ -3,9 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/password";
 import { requireProfessor } from "@/lib/authorization";
 
-// ==========================================
-// GET /api/user/:id
-// ==========================================
 export async function GET(request: Request, context: {params: Promise<{ id: string }>;}) {
 
   try {
@@ -37,9 +34,6 @@ export async function GET(request: Request, context: {params: Promise<{ id: stri
       );
     }
 
-    // ==========================================
-    // USER
-    // ==========================================
     const user = await prisma.user.findUnique({
         where: {
           id: userId,
@@ -80,9 +74,6 @@ export async function GET(request: Request, context: {params: Promise<{ id: stri
   }
 }
 
-// ==========================================
-// PATCH USER
-// ==========================================
 export async function PATCH(
   request: Request,
   context: {params: Promise<{ id: string }>;}) {
@@ -119,9 +110,6 @@ export async function PATCH(
     const body = await request.json();
     const {name, password, role,} = body;
 
-    // ==========================================
-    // ROLE VALIDATION
-    // ==========================================
     if (role && role !== "PROFESSOR" && role !== "TRAINER") {
 
       return NextResponse.json(
@@ -162,9 +150,6 @@ export async function PATCH(
       hashedPassword = await hashPassword(password);
     }
 
-    // ==========================================
-    // UPDATE USER
-    // ==========================================
     const user = await prisma.user.update({
         where: {
           id: userId,
@@ -209,9 +194,6 @@ export async function PATCH(
   }
 }
 
-// ==========================================
-// DELETE USER
-// ==========================================
 export async function DELETE(request: Request, context: {params: Promise<{ id: string }>;}) {
 
   try {
@@ -280,9 +262,6 @@ export async function DELETE(request: Request, context: {params: Promise<{ id: s
       }
     }
 
-    // ==========================================
-    // DELETE USER
-    // ==========================================
     await prisma.$transaction(
       async (transaction) => {
 
@@ -302,9 +281,6 @@ export async function DELETE(request: Request, context: {params: Promise<{ id: s
           },
         });
 
-        // ==========================================
-        // CLEAN UNUSED POKEMON
-        // ==========================================
         for (const collection of collections) {
           const remainingCollection = await transaction.collection.findFirst({
               where: {
