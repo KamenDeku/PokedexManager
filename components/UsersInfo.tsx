@@ -6,6 +6,7 @@ import CreateUserModal from "./CreateUserModal";
 import Pagination from "./Pagination";
 import { getTotalPages, paginate } from "@/lib/pagination";
 import cardStyles from "./PokemonCard.module.css";
+import { getUserRoleLabel } from "@/lib/userRoles";
 import styles from "./UsersInfo.module.css";
 
 type User = {
@@ -188,7 +189,7 @@ export default function UsersInfo({search, role, page, setPage, onSelectUser,}: 
             </div>
 
             <span className={`${styles.userRole} ${user.role === "PROFESSOR" ? styles.professor : ""}`}>
-              {user.role === "PROFESSOR" ? "Profesor" : "Entrenador"}
+              {getUserRoleLabel(user.role)}
             </span>
 
             {isProfessor && (

@@ -23,19 +23,23 @@ type PokemonApiResponse = {
 
 type PokemonGridProps = {
   search: string;
-  type: string;
+  types: string[];
+  forms: string[];
   page: number;
   setPage: (page: number) => void;
   ownedIds: number[];
   onOwnedChange: (pokeApiId: number, owned: boolean) => void;
 };
 
-export default function PokemonGrid({search, type, page, setPage, ownedIds, onOwnedChange,}: PokemonGridProps) {
+export default function PokemonGrid({search, types, forms, page, setPage, ownedIds, onOwnedChange,}: PokemonGridProps) {
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
   const [totalPokemon, setTotalPokemon] = useState(0);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const typesKey = types.join(",");
+  const formsKey = forms.join(",");
 
   useEffect(() => {
     async function loadPokemon() {
@@ -53,8 +57,12 @@ export default function PokemonGrid({search, type, page, setPage, ownedIds, onOw
           params.set("name", search.trim().toLowerCase());
         }
 
-        if (type) {
-          params.set("type", type);
+        if (typesKey) {
+          params.set("types", typesKey);
+        }
+
+        if (formsKey) {
+          params.set("forms", formsKey);
         }
 
         const response = await fetch(`/api/pokemon?${params.toString()}`);
@@ -92,7 +100,7 @@ export default function PokemonGrid({search, type, page, setPage, ownedIds, onOw
     }
 
     loadPokemon();
-  }, [search, type, page]);
+  }, [search, typesKey, formsKey, page]);
 
   if (loading) {
     return (

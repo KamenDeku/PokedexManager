@@ -231,6 +231,31 @@ export async function getPokemonByType(
 }
 
 // ==========================================
+// GET BY TYPES - POKEAPI
+// ==========================================
+export async function getPokemonByTypes(
+  types: string[]
+): Promise<PokemonListItem[]> {
+  if (types.length === 0) {
+    throw new Error("El tipo de Pokemon es requerido");
+  }
+
+  const lists = await Promise.all(
+    types.map((type) => getPokemonByType(type))
+  );
+
+  const [first, ...rest] = lists;
+
+  const restIds = rest.map(
+    (list) => new Set(list.map((item) => item.id))
+  );
+
+  return first.filter((item) =>
+    restIds.every((ids) => ids.has(item.id))
+  );
+}
+
+// ==========================================
 // GET TYPES - POKEAPI
 // ==========================================
 const typesCache = new Map<number, string[]>();

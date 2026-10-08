@@ -1,5 +1,6 @@
 "use client";
 import { FormEvent, useState } from "react";
+import { getUserRoleLabel } from "@/lib/userRoles";
 import styles from "./CreateUserModal.module.css";
 
 type User = {
@@ -152,7 +153,7 @@ export default function CreateUserModal({onClose, onDone,}: CreateUserModalProps
         {confirm && (
           <div className={styles.userForm}>
             <p>
-              ¿Seguro que quieres crear a <strong>{name}</strong> como {role === "PROFESSOR" ? "Profesor" : "Entrenador"}?
+              ¿Seguro que quieres crear a <strong>{name}</strong> como {getUserRoleLabel(role)}?
             </p>
 
             {error && (

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getPokemonByType } from "@/lib/pokeapi";
+import { getPokemonByTypes } from "@/lib/pokeapi";
+import { matchesForms } from "@/lib/pokemonForms";
 import { getTotalPages, paginate } from "@/lib/pagination";
 import PokemonCard from "./PokemonCard";
 import Pagination from "./Pagination";
@@ -23,17 +24,20 @@ type CollectionApiItem = {
 type PokemonCollectionProps = {
   userId: number | null;
   search: string;
-  type: string;
+  types: string[];
+  forms: string[];
   page: number;
   setPage: (page: number) => void;
 };
 
-export default function PokemonCollection({userId, search, type, page, setPage,}: PokemonCollectionProps) {
+export default function PokemonCollection({userId, search, types, forms, page, setPage,}: PokemonCollectionProps) {
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
   const [typeIds, setTypeIds] = useState<number[] | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const typesKey = types.join(",");
 
   const term = search.trim().toLowerCase();
   const isId = /^\d+$/.test(term);
@@ -41,8 +45,9 @@ export default function PokemonCollection({userId, search, type, page, setPage,}
   const filteredPokemon = pokemon.filter((item) => {
     const matchesSearch = !term || item.name.toLowerCase().includes(term) || (isId && item.id === Number(term));
     const matchesType = !typeIds || typeIds.includes(item.id);
+    const matchesForm = matchesForms(item.name, forms);
 
-    return matchesSearch && matchesType;
+    return matchesSearch && matchesType && matchesForm;
   });
 
   const totalPages = getTotalPages(filteredPokemon.length);
@@ -91,14 +96,14 @@ export default function PokemonCollection({userId, search, type, page, setPage,}
   }, [userId]);
 
   useEffect(() => {
-    if (!type) {
+    if (!typesKey) {
       setTypeIds(null);
       return;
     }
 
     async function loadType() {
       try {
-        const list = await getPokemonByType(type);
+        const list = await getPokemonByTypes(typesKey.split(","));
 
         setTypeIds(list.map((item) => item.id));
       } catch (error) {
@@ -107,7 +112,7 @@ export default function PokemonCollection({userId, search, type, page, setPage,}
     }
 
     loadType();
-  }, [type]);
+  }, [typesKey]);
 
   useEffect(() => {
     if (page > totalPages) {

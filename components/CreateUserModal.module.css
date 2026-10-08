@@ -25,8 +25,7 @@
 
   background: var(--white);
 
-  box-shadow:
-    0 15px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
 
   overflow: hidden;
 }
@@ -98,8 +97,7 @@
 .userForm select:focus {
   border-color: var(--pokemon-red);
 
-  box-shadow:
-    0 0 0 2px rgba(193, 18, 35, 0.15);
+  box-shadow: 0 0 0 2px rgba(193, 18, 35, 0.15);
 }
 
 .error {
@@ -129,8 +127,7 @@
 
   cursor: pointer;
 
-  transition:
-    background 0.2s ease;
+  transition: background 0.2s ease;
 }
 
 .userSubmit:hover {

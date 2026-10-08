@@ -54,7 +54,7 @@ export default function PokemonCard({ pokemon, owned = false,onOwnedChange, }: P
       {owned && (
         <img className={styles.ownedBadge}
           src="/svg/pokeball.svg"
-          alt="Mi coleccion"
+          alt="Mi PC"
         />
       )}
 

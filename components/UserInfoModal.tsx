@@ -1,6 +1,7 @@
 "use client";
 import { FormEvent, useState } from "react";
 import { useSession } from "next-auth/react";
+import { getUserRoleLabel } from "@/lib/userRoles";
 import styles from "./UserInfoModal.module.css";
 
 type User = {
@@ -118,7 +119,7 @@ export default function UserInfoModal({user, mode, onClose, onDone,}: UserInfoMo
           <div className={styles.userInfo}>
             <p><strong>ID:</strong> #{String(user.id).padStart(3, "0")}</p>
             <p><strong>Usuario:</strong> {user.name}</p>
-            <p><strong>Rol:</strong> {user.role === "PROFESSOR" ? "Profesor" : "Entrenador"}</p>
+            <p><strong>Rol:</strong> {getUserRoleLabel(user.role)}</p>
             <p><strong>Creado:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
           </div>
         )}

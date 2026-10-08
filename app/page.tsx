@@ -16,7 +16,8 @@ type Screen = {
 
 export default function Home() {
   const [search, setSearch] = useState("");
-  const [type, setType] = useState("");
+  const [types, setTypes] = useState<string[]>([]);
+  const [forms, setForms] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [view, setView] = useState<View>("pokedex");
   const [history, setHistory] = useState<Screen[]>([]);
@@ -26,7 +27,8 @@ export default function Home() {
   const [userRole, setUserRole] = useState("");
   const [userPage, setUserPage] = useState(1);
   const [collectionSearch, setCollectionSearch] = useState("");
-  const [collectionType, setCollectionType] = useState("");
+  const [collectionTypes, setCollectionTypes] = useState<string[]>([]);
+  const [collectionForms, setCollectionForms] = useState<string[]>([]);
   const [collectionPage, setCollectionPage] = useState(1);
 
   const { status } = useSession();
@@ -64,10 +66,28 @@ export default function Home() {
     loadOwned();
   }, [status]);
 
+  function clearFilters() {
+    setSearch("");
+    setTypes([]);
+    setForms([]);
+    setPage(1);
+
+    setUserSearch("");
+    setUserRole("");
+    setUserPage(1);
+
+    setCollectionSearch("");
+    setCollectionTypes([]);
+    setCollectionForms([]);
+    setCollectionPage(1);
+  }
+
   function navigateTo(nextView: View, nextUserId: number | null) {
     if (nextView === view && nextUserId === collectionUserId) {
       return;
     }
+
+    clearFilters();
 
     setHistory((previous) => [...previous, { view, userId: collectionUserId }]);
     setView(nextView);
@@ -106,20 +126,36 @@ export default function Home() {
     navigateTo("pokedex", null);
   }
   
-  function handleTypeChange(value: string) {
+  function handleTypesChange(value: string[]) {
     if (view === "users") {
-      setUserRole(value);
+      setUserRole(value[0] ?? "");
       setUserPage(1);
       return;
     }
   
     if (view === "collection") {
-      setCollectionType(value);
+      setCollectionTypes(value);
       setCollectionPage(1);
       return;
     }
   
-    setType(value);
+    setTypes(value);
+    setPage(1);
+    navigateTo("pokedex", null);
+  }
+
+  function handleFormsChange(value: string[]) {
+    if (view === "users") {
+      return;
+    }
+
+    if (view === "collection") {
+      setCollectionForms(value);
+      setCollectionPage(1);
+      return;
+    }
+  
+    setForms(value);
     setPage(1);
     navigateTo("pokedex", null);
   }
@@ -148,15 +184,18 @@ export default function Home() {
   const navbarView = view === "collection" && collectionUserId ? "users" : view;
   const usersMode = view === "users";
   const navbarSearch = view === "users" ? userSearch : view === "collection" ? collectionSearch : search;
-  const navbarType = view === "users" ? userRole : view === "collection" ? collectionType : type;
+  const navbarTypes = view === "users" ? (userRole ? [userRole] : []) : view === "collection" ? collectionTypes : types;
+  const navbarForms = view === "collection" ? collectionForms : forms;
 
   return (
     <main className={styles.landingPage}>
       <Navbar
         search={navbarSearch}
         setSearch={handleSearchChange}
-        type={navbarType}
-        setType={handleTypeChange}
+        types={navbarTypes}
+        setTypes={handleTypesChange}
+        forms={navbarForms}
+        setForms={handleFormsChange}
         view={navbarView}
         setView={handleViewChange}
         usersMode={usersMode}
@@ -189,7 +228,8 @@ export default function Home() {
         {view === "pokedex" && (
           <PokemonGrid
             search={search}
-            type={type}
+            types={types}
+            forms={forms}
             page={page}
             setPage={setPage}
             ownedIds={ownedIds}
@@ -201,7 +241,8 @@ export default function Home() {
           <PokemonCollection
             userId={collectionUserId}
             search={collectionSearch}
-            type={collectionType}
+            types={collectionTypes}
+            forms={collectionForms}
             page={collectionPage}
             setPage={setCollectionPage}
           />
