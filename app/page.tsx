@@ -22,6 +22,12 @@ export default function Home() {
   const [history, setHistory] = useState<Screen[]>([]);
   const [collectionUserId, setCollectionUserId] = useState<number | null>(null);
   const [ownedIds, setOwnedIds] = useState<number[]>([]);
+  const [userSearch, setUserSearch] = useState("");
+  const [userRole, setUserRole] = useState("");
+  const [userPage, setUserPage] = useState(1);
+  const [collectionSearch, setCollectionSearch] = useState("");
+  const [collectionType, setCollectionType] = useState("");
+  const [collectionPage, setCollectionPage] = useState(1);
 
   const { status } = useSession();
 
@@ -66,6 +72,7 @@ export default function Home() {
     setHistory((previous) => [...previous, { view, userId: collectionUserId }]);
     setView(nextView);
     setCollectionUserId(nextUserId);
+    setCollectionPage(1);
   }
 
   function handleBack() {
@@ -78,15 +85,40 @@ export default function Home() {
     setHistory((value) => value.slice(0, -1));
     setView(previous.view);
     setCollectionUserId(previous.userId);
+    setCollectionPage(1);
   }
 
   function handleSearchChange(value: string) {
+    if (view === "users") {
+      setUserSearch(value);
+      setUserPage(1);
+      return;
+    }
+  
+    if (view === "collection") {
+      setCollectionSearch(value);
+      setCollectionPage(1);
+      return;
+    }
+  
     setSearch(value);
     setPage(1);
     navigateTo("pokedex", null);
   }
-
+  
   function handleTypeChange(value: string) {
+    if (view === "users") {
+      setUserRole(value);
+      setUserPage(1);
+      return;
+    }
+  
+    if (view === "collection") {
+      setCollectionType(value);
+      setCollectionPage(1);
+      return;
+    }
+  
     setType(value);
     setPage(1);
     navigateTo("pokedex", null);
@@ -114,16 +146,20 @@ export default function Home() {
   }
 
   const navbarView = view === "collection" && collectionUserId ? "users" : view;
+  const usersMode = view === "users";
+  const navbarSearch = view === "users" ? userSearch : view === "collection" ? collectionSearch : search;
+  const navbarType = view === "users" ? userRole : view === "collection" ? collectionType : type;
 
   return (
     <main className={styles.landingPage}>
       <Navbar
-        search={search}
+        search={navbarSearch}
         setSearch={handleSearchChange}
-        type={type}
+        type={navbarType}
         setType={handleTypeChange}
         view={navbarView}
         setView={handleViewChange}
+        usersMode={usersMode}
       />
 
       <section className={styles.pokemonSection}>
@@ -141,12 +177,14 @@ export default function Home() {
           </button>
         )}
 
-        <div className={styles.sectionHeader}>
-          <p>
-            Explora Pokemon y descubre tu próximo
-            compañero.
-          </p>
-        </div>
+        {view === "pokedex" && (
+          <div className={styles.sectionHeader}>
+            <p>
+              Explora Pokemon y descubre tu proximo
+              compañero.
+            </p>
+          </div>
+        )}
 
         {view === "pokedex" && (
           <PokemonGrid
@@ -160,11 +198,23 @@ export default function Home() {
         )}
 
         {view === "collection" && (
-          <PokemonCollection userId={collectionUserId} />
+          <PokemonCollection
+            userId={collectionUserId}
+            search={collectionSearch}
+            type={collectionType}
+            page={collectionPage}
+            setPage={setCollectionPage}
+          />
         )}
 
         {view === "users" && (
-          <UsersInfo onSelectUser={handleSelectUser} />
+          <UsersInfo
+            search={userSearch}
+            role={userRole}
+            page={userPage}
+            setPage={setUserPage}
+            onSelectUser={handleSelectUser}
+          />
         )}
 
       </section>

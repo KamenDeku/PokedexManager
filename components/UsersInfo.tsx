@@ -2,6 +2,9 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import UserInfoModal from "./UserInfoModal";
+import CreateUserModal from "./CreateUserModal";
+import Pagination from "./Pagination";
+import { getTotalPages, paginate } from "@/lib/pagination";
 import cardStyles from "./PokemonCard.module.css";
 import styles from "./UsersInfo.module.css";
 
@@ -13,11 +16,16 @@ type User = {
 };
 
 type UsersInfoProps = {
+  search: string;
+  role: string;
+  page: number;
+  setPage: (page: number) => void;
   onSelectUser: (userId: number) => void;
 };
 
-export default function UsersInfo({onSelectUser,}: UsersInfoProps) {
+export default function UsersInfo({search, role, page, setPage, onSelectUser,}: UsersInfoProps) {
   const [users, setUsers] = useState<User[]>([]);
+  const [createOpen, setCreateOpen] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -28,6 +36,19 @@ export default function UsersInfo({onSelectUser,}: UsersInfoProps) {
   const { data: session } = useSession();
 
   const isProfessor = session?.user?.role === "PROFESSOR";
+
+  const term = search.trim().toLowerCase();
+  const isId = /^\d+$/.test(term);
+
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch = !term || user.name.toLowerCase().includes(term) || (isId && user.id === Number(term));
+    const matchesRole = !role || user.role === role;
+
+    return matchesSearch && matchesRole;
+  });
+
+  const totalPages = getTotalPages(filteredUsers.length);
+  const visibleUsers = paginate(filteredUsers, page);
 
   useEffect(() => {
     async function loadUsers() {
@@ -74,6 +95,12 @@ export default function UsersInfo({onSelectUser,}: UsersInfoProps) {
     };
   }, []);
 
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages, setPage]);
+
   function handleOption(user: User, mode: "edit" | "delete") {
     setMenuUserId(null);
     setSelected({ user, mode });
@@ -85,6 +112,10 @@ export default function UsersInfo({onSelectUser,}: UsersInfoProps) {
         ? previous.map((user) => (user.id === updated.id ? updated : user))
         : previous.filter((user) => user.id !== selected?.user.id)
     );
+  }
+
+  function handleCreated(created: User) {
+    setUsers((previous) => [...previous, created]);
   }
 
   if (loading) {
@@ -108,7 +139,31 @@ export default function UsersInfo({onSelectUser,}: UsersInfoProps) {
   return (
     <>
       <div className={styles.usersGrid}>
-        {users.map((user) => (
+
+        {page === 1 && (
+          <article className={`${cardStyles.pokemonCard} ${styles.userCard}`}
+            onClick={() => setCreateOpen(true)}
+          >
+
+            <div className={cardStyles.pokemonNumber}>
+              Nuevo
+            </div>
+
+            <div className={cardStyles.pokemonImageContainer}>
+              <img className={cardStyles.pokemonImage}
+                src="/svg/agregar-usuario.svg"
+                alt="Agregar usuario"
+              />
+            </div>
+
+            <div className={cardStyles.pokemonName}>
+              Agregar usuario
+            </div>
+
+          </article>
+        )}
+
+        {visibleUsers.map((user) => (
           <article className={`${cardStyles.pokemonCard} ${styles.userCard}`}
             key={user.id}
             onClick={() => onSelectUser(user.id)}
@@ -174,7 +229,14 @@ export default function UsersInfo({onSelectUser,}: UsersInfoProps) {
 
           </article>
         ))}
+
       </div>
+
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        setPage={setPage}
+      />
 
       {selected && (
         <UserInfoModal
@@ -183,6 +245,13 @@ export default function UsersInfo({onSelectUser,}: UsersInfoProps) {
           mode={selected.mode}
           onClose={() => setSelected(null)}
           onDone={handleDone}
+        />
+      )}
+
+      {createOpen && (
+        <CreateUserModal
+          onClose={() => setCreateOpen(false)}
+          onDone={handleCreated}
         />
       )}
     </>

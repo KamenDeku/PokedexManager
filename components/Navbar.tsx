@@ -12,9 +12,15 @@ type NavbarProps = {
   setType: (value: string) => void;
   view: "pokedex" | "collection" | "users";
   setView: (value: "pokedex" | "collection" | "users") => void;
+  usersMode: boolean;
 };
 
-export default function Navbar({search, setSearch, type, setType, view, setView,}: NavbarProps) {
+const userRoles = [
+  { value: "PROFESSOR", label: "Profesor" },
+  { value: "TRAINER", label: "Entrenador" },
+];
+
+export default function Navbar({search, setSearch, type, setType, view, setView, usersMode,}: NavbarProps) {
 
   const [loginOpen, setLoginOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,6 +33,7 @@ export default function Navbar({search, setSearch, type, setType, view, setView,
 
   const isLoggedIn = !!session?.user;
   const isProfessor = session?.user?.role === "PROFESSOR";
+  const filters = usersMode ? userRoles : pokemonTypes;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -98,7 +105,7 @@ export default function Navbar({search, setSearch, type, setType, view, setView,
 
             <input
               type="search"
-              placeholder="Buscar por nombre o id..."
+              placeholder="Buscar por nombre o id"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
             />
@@ -127,7 +134,7 @@ export default function Navbar({search, setSearch, type, setType, view, setView,
                     Todos
                   </button>
 
-                  {pokemonTypes.map((pokemonType) => (
+                  {filters.map((pokemonType) => (
                     <button className={`${styles.typeButton} ${type === pokemonType.value ? styles.activeType : ""}`}
                       key={pokemonType.value}
                       type="button"

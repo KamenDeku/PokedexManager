@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import PokemonCard from "./PokemonCard";
+import Pagination from "./Pagination";
+import { ITEMS_PER_PAGE, getTotalPages } from "@/lib/pagination";
 import styles from "./PokemonGrid.module.css";
 
 type Pokemon = {
@@ -28,8 +30,6 @@ type PokemonGridProps = {
   onOwnedChange: (pokeApiId: number, owned: boolean) => void;
 };
 
-const POKEMON_PER_PAGE = 20;
-
 export default function PokemonGrid({search, type, page, setPage, ownedIds, onOwnedChange,}: PokemonGridProps) {
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
   const [totalPokemon, setTotalPokemon] = useState(0);
@@ -43,10 +43,10 @@ export default function PokemonGrid({search, type, page, setPage, ownedIds, onOw
         setLoading(true);
         setError("");
 
-        const offset = (page - 1) * POKEMON_PER_PAGE;
+        const offset = (page - 1) * ITEMS_PER_PAGE;
         const params = new URLSearchParams();
 
-        params.set( "limit", POKEMON_PER_PAGE.toString());
+        params.set( "limit", ITEMS_PER_PAGE.toString());
         params.set("offset", offset.toString());
 
         if (search.trim()) {
@@ -94,20 +94,6 @@ export default function PokemonGrid({search, type, page, setPage, ownedIds, onOw
     loadPokemon();
   }, [search, type, page]);
 
-  const totalPages = Math.ceil(totalPokemon / POKEMON_PER_PAGE);
-
-  function handlePreviousPage() {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  }
-
-  function handleNextPage() {
-    if (page < totalPages) {
-      setPage(page + 1);
-    }
-  }
-
   if (loading) {
     return (
       <div className={styles.pokemonMessage}>
@@ -147,27 +133,11 @@ export default function PokemonGrid({search, type, page, setPage, ownedIds, onOw
         ))}
       </div>
 
-      <div className={styles.pagination}>
-        <button
-          className={styles.paginationButton}
-          onClick={handlePreviousPage}
-          disabled={page === 1}
-        >
-          ← Anterior
-        </button>
-
-        <span className={styles.pageNumber}>
-          Pagina {page} de {totalPages}
-        </span>
-
-        <button
-          className={styles.paginationButton}
-          onClick={handleNextPage}
-          disabled={page === totalPages}
-        >
-          Siguiente →
-        </button>
-      </div>
+      <Pagination
+        page={page}
+        totalPages={getTotalPages(totalPokemon)}
+        setPage={setPage}
+      />
     </>
   );
 }

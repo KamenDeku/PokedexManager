@@ -37,6 +37,48 @@ const users = [
     password: "misty123",
     role: "TRAINER" as const,
   },
+  {
+    id: 4,
+    name: "Brock",
+    password: "brock123",
+    role: "TRAINER" as const,
+  },
+  {
+    id: 5,
+    name: "Gary Oak",
+    password: "gary123",
+    role: "TRAINER" as const,
+  },
+  {
+    id: 6,
+    name: "May",
+    password: "may123",
+    role: "TRAINER" as const,
+  },
+  {
+    id: 7,
+    name: "Dawn",
+    password: "dawn123",
+    role: "TRAINER" as const,
+  },
+  {
+    id: 8,
+    name: "Serena",
+    password: "serena123",
+    role: "TRAINER" as const,
+  },
+  {
+    id: 9,
+    name: "Clemont",
+    password: "clemont123",
+    role: "TRAINER" as const,
+  },
+  {
+    id: 10,
+    name: "Lillie",
+    password: "lillie123",
+    role: "TRAINER" as const,
+  },
 ];
 
 const pokemons = [
@@ -59,6 +101,106 @@ const pokemons = [
   {
     pokeApiId: 150,
     name: "Mewtwo",
+  },
+  {
+    pokeApiId: 6,
+    name: "Charizard",
+  },
+  {
+    pokeApiId: 9,
+    name: "Blastoise",
+  },
+  {
+    pokeApiId: 3,
+    name: "Venusaur",
+  },
+  {
+    pokeApiId: 2,
+    name: "Ivysaur",
+  },
+  {
+    pokeApiId: 5,
+    name: "Charmeleon",
+  },
+  {
+    pokeApiId: 8,
+    name: "Wartortle",
+  },
+  {
+    pokeApiId: 10,
+    name: "Caterpie",
+  },
+  {
+    pokeApiId: 12,
+    name: "Butterfree",
+  },
+  {
+    pokeApiId: 19,
+    name: "Rattata",
+  },
+  {
+    pokeApiId: 20,
+    name: "Raticate",
+  },
+  {
+    pokeApiId: 21,
+    name: "Spearow",
+  },
+  {
+    pokeApiId: 22,
+    name: "Fearow",
+  },
+  {
+    pokeApiId: 39,
+    name: "Jigglypuff",
+  },
+  {
+    pokeApiId: 54,
+    name: "Psyduck",
+  },
+  {
+    pokeApiId: 59,
+    name: "Arcanine",
+  },
+  {
+    pokeApiId: 94,
+    name: "Gengar",
+  },
+  {
+    pokeApiId: 131,
+    name: "Lapras",
+  },
+  {
+    pokeApiId: 143,
+    name: "Snorlax",
+  },
+  {
+    pokeApiId: 149,
+    name: "Dragonite",
+  },
+  {
+    pokeApiId: 151,
+    name: "Mew",
+  },
+  {
+    pokeApiId: 155,
+    name: "Cyndaquil",
+  },
+  {
+    pokeApiId: 158,
+    name: "Totodile",
+  },
+  {
+    pokeApiId: 175,
+    name: "Togepi",
+  },
+  {
+    pokeApiId: 197,
+    name: "Umbreon",
+  },
+  {
+    pokeApiId: 249,
+    name: "Lugia",
   },
 ];
 
@@ -134,6 +276,9 @@ async function main() {
   // COLLECTION
   // ==========================================
   const collections = [
+    // ==========================================
+    // PROFESSOR OAK
+    // ==========================================
     {
       userId: 1,
       pokemonPokeApiId: 25,
@@ -149,33 +294,39 @@ async function main() {
       pokemonPokeApiId: 7,
       status: "NOT_CAUGHT" as const,
     },
-
     {
-      userId: 2,
-      pokemonPokeApiId: 25,
-      status: "CAUGHT" as const,
-    },
-    {
-      userId: 2,
-      pokemonPokeApiId: 4,
-      status: "CAUGHT" as const,
-    },
-    {
-      userId: 2,
-      pokemonPokeApiId: 7,
-      status: "NOT_CAUGHT" as const,
-    },
-    {
-      userId: 2,
+      userId: 1,
       pokemonPokeApiId: 1,
       status: "CAUGHT" as const,
     },
-
+  
+    // ==========================================
+    // ASH KETCHUM
+    // ==========================================
     {
-      userId: 3,
+      userId: 2,
       pokemonPokeApiId: 25,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 2,
+      pokemonPokeApiId: 6,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 2,
+      pokemonPokeApiId: 9,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 2,
+      pokemonPokeApiId: 150,
       status: "NOT_CAUGHT" as const,
     },
+  
+    // ==========================================
+    // MISTY
+    // ==========================================
     {
       userId: 3,
       pokemonPokeApiId: 7,
@@ -183,8 +334,186 @@ async function main() {
     },
     {
       userId: 3,
-      pokemonPokeApiId: 150,
+      pokemonPokeApiId: 54,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 3,
+      pokemonPokeApiId: 131,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 3,
+      pokemonPokeApiId: 25,
       status: "NOT_CAUGHT" as const,
+    },
+  
+    // ==========================================
+    // BROCK
+    // ==========================================
+    {
+      userId: 4,
+      pokemonPokeApiId: 1,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 4,
+      pokemonPokeApiId: 143,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 4,
+      pokemonPokeApiId: 149,
+      status: "NOT_CAUGHT" as const,
+    },
+    {
+      userId: 4,
+      pokemonPokeApiId: 94,
+      status: "CAUGHT" as const,
+    },
+  
+    // ==========================================
+    // GARY OAK
+    // ==========================================
+    {
+      userId: 5,
+      pokemonPokeApiId: 150,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 5,
+      pokemonPokeApiId: 151,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 5,
+      pokemonPokeApiId: 149,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 5,
+      pokemonPokeApiId: 25,
+      status: "NOT_CAUGHT" as const,
+    },
+  
+    // ==========================================
+    // MAY
+    // ==========================================
+    {
+      userId: 6,
+      pokemonPokeApiId: 155,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 6,
+      pokemonPokeApiId: 158,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 6,
+      pokemonPokeApiId: 175,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 6,
+      pokemonPokeApiId: 197,
+      status: "NOT_CAUGHT" as const,
+    },
+  
+    // ==========================================
+    // DAWN
+    // ==========================================
+    {
+      userId: 7,
+      pokemonPokeApiId: 39,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 7,
+      pokemonPokeApiId: 12,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 7,
+      pokemonPokeApiId: 10,
+      status: "NOT_CAUGHT" as const,
+    },
+    {
+      userId: 7,
+      pokemonPokeApiId: 59,
+      status: "CAUGHT" as const,
+    },
+  
+    // ==========================================
+    // SERENA
+    // ==========================================
+    {
+      userId: 8,
+      pokemonPokeApiId: 39,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 8,
+      pokemonPokeApiId: 25,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 8,
+      pokemonPokeApiId: 175,
+      status: "NOT_CAUGHT" as const,
+    },
+    {
+      userId: 8,
+      pokemonPokeApiId: 197,
+      status: "CAUGHT" as const,
+    },
+  
+    // ==========================================
+    // CLEMONT
+    // ==========================================
+    {
+      userId: 9,
+      pokemonPokeApiId: 20,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 9,
+      pokemonPokeApiId: 22,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 9,
+      pokemonPokeApiId: 94,
+      status: "NOT_CAUGHT" as const,
+    },
+    {
+      userId: 9,
+      pokemonPokeApiId: 249,
+      status: "CAUGHT" as const,
+    },
+  
+    // ==========================================
+    // LILLIE
+    // ==========================================
+    {
+      userId: 10,
+      pokemonPokeApiId: 175,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 10,
+      pokemonPokeApiId: 197,
+      status: "CAUGHT" as const,
+    },
+    {
+      userId: 10,
+      pokemonPokeApiId: 151,
+      status: "NOT_CAUGHT" as const,
+    },
+    {
+      userId: 10,
+      pokemonPokeApiId: 150,
+      status: "CAUGHT" as const,
     },
   ];
 
