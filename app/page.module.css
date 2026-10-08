@@ -1,7 +1,16 @@
 .landingPage {
   min-height: 100vh;
 
-  background: var(--page-gray);
+  background: linear-gradient(
+    135deg,
+    #4f5155 0%,
+    #626e78 20%,
+    #78828a 40%,
+    #858990 50%,
+    #6e7179 65%,
+    var(--page-gray) 80%,
+    #6e7179 100%
+  );
 }
 
 .pokemonSection {

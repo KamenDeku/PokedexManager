@@ -229,3 +229,32 @@ export async function getPokemonByType(
     }
   );
 }
+
+// ==========================================
+// GET TYPES - POKEAPI
+// ==========================================
+const typesCache = new Map<number, string[]>();
+
+export async function getPokemonTypes(id: number): Promise<string[]> {
+  const cached = typesCache.get(id);
+
+  if (cached) {
+    return cached;
+  }
+
+  const response = await fetch(`${POKE_API_URL}/pokemon/${id}`);
+
+  if (!response.ok) {
+    throw new Error("Error al consultar PokeAPI");
+  }
+
+  const data = await response.json();
+
+  const types: string[] = data.types
+    .sort((a: PokemonType, b: PokemonType) => a.slot - b.slot)
+    .map((item: PokemonType) => item.type.name);
+
+  typesCache.set(id, types);
+
+  return types;
+}

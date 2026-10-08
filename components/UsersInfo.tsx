@@ -138,6 +138,9 @@ export default function UsersInfo({search, role, page, setPage, onSelectUser,}: 
 
   return (
     <>
+      <h2 className={styles.usersTitle}>
+        Usuarios
+      </h2>
       <div className={styles.usersGrid}>
 
         {page === 1 && (
