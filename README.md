@@ -184,3 +184,18 @@ El objetivo es pulir la experiencia, documentar y agregar valor extra.
 - Las rutas de colección, usuarios y chat comprueban la sesión y, cuando corresponde, el rol del usuario.
 - `AUTH_SECRET`, las credenciales de base de datos y `AI_API_KEY` son valores privados del servidor; no uses prefijos `NEXT_PUBLIC_` para ellos.
 - Los valores de credenciales del seed solo deben usarse en entornos locales de prueba.
+
+## Decisiones técnicas
+
+- **Next.js 16 (App Router):** permite desarrollar frontend y backend en un solo proyecto, con Route Handlers como API y credenciales sensibles solo en el servidor.
+- **TypeScript:** el tipado estático reduce errores y mantiene contratos claros entre servicios y componentes (usuarios, Pokémon, colecciones, roles y respuestas de PokéAPI).
+- **Prisma + MySQL/MariaDB:** ofrece un modelo tipado, CRUD simplificado y migraciones versionadas. La base relacional mantiene las relaciones entre usuarios, colecciones, memorias e historial de chat.
+- **PokéAPI:** es la fuente de datos de los Pokémon, así que no se duplica la Pokédex en la base local. La base de datos solo guarda lo propio de la aplicación.
+- **NextAuth.js + JWT:** controla el acceso y diferencia los roles `TRAINER` y `PROFESSOR`. Las sesiones JWT evitan almacenar sesiones en la base de datos, y el rol se verifica antes de cualquier operación administrativa.
+- **bcrypt:** las contraseñas se guardan como hash, nunca en texto plano.
+- **CSS Modules:** los estilos quedan asociados a cada componente, sin conflictos de nombres, y la interfaz se mantiene ordenada al crecer.
+- **Separación de responsabilidades:** `lib/` (datos, servicios, autorización e IA), `components/` (interfaz), `app/api/` (endpoints) y `prisma/` (esquema, migraciones y seed), para modificar una parte sin afectar las demás.
+- **Variables de entorno privadas:** las credenciales de MySQL, `AUTH_SECRET` y `AI_API_KEY` nunca usan `NEXT_PUBLIC_*` y solo se usan en el servidor.
+- **Rotom con tool/function calling:** el modelo no accede directamente a la base de datos, sino a herramientas controladas (`get_my_collection`, `get_pokemon_info`, `get_pokemon_by_type`) que devuelven solo lo necesario. El asistente no puede modificar la colección, lo que reduce el riesgo de cambios no autorizados.
+- **Memoria por usuario:** guarda preferencias y datos no sensibles entre conversaciones, y cada operación verifica la identidad para que nadie acceda a las memorias de otra cuenta.
+- **Colección idempotente:** agregar un Pokémon repetido no crea registros duplicados para el mismo usuario, así que repetir la operación es seguro.
